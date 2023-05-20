@@ -1,0 +1,308 @@
+<template>
+    <view class="index-container">
+        <u-sticky bgColor="#FAFAFA">
+            <view class="header">
+                <u-search
+                    placeholder="搜索"
+                    v-model="keyword"
+                    @search="onSearch"
+                    :showAction="false"
+                ></u-search>
+                <u-tabs
+                    :list="levelList"
+                    lineWidth="50"
+                    lineColor="#00cdda"
+                    @click="onSelectLevel"
+                    itemStyle="padding: 15px 17px"
+                ></u-tabs>
+            </view>
+        </u-sticky>
+        <u-gap></u-gap>
+        <view class="layout">
+            <view
+                class="card-box"
+                v-for="(item, index) in shopList"
+                :key="index"
+            >
+                <u-cell
+                    title="思维启蒙"
+                    :border="false"
+                    isLink
+                    :titleStyle="{ fontWeight: 600 }"
+                    :rightIconStyle="{ color: '#00cdda' }"
+                >
+                    <text slot="value" class="more" @click="onInfo">更多</text>
+                </u-cell>
+                <view class="card">
+                    <!-- 内容 -->
+                    <view class="shop-left">
+                        <image src="../../static/1.png" mode="widthFix"></image>
+                    </view>
+                    <view class="shop-right">
+                        <view class="shop-title"> 主题式英语单词画册1 </view>
+                        <view class="shop-tag">
+                            <view class="tag">
+                                <u-tag
+                                    text="已借过"
+                                    shape="circle"
+                                    bgColor="#EDF8D8"
+                                    color="#9FC152"
+                                    borderColor="#EDF8D8"
+                                ></u-tag>
+                            </view>
+                            <view class="tag">
+                                <u-tag
+                                    text="高人气"
+                                    shape="circle"
+                                    bgColor="#FFE8D0"
+                                    color="#DE7A00"
+                                    borderColor="#FFE8D0"
+                                ></u-tag>
+                            </view>
+                            <view class="tag">
+                                <u-tag
+                                    text="已借完"
+                                    shape="circle"
+                                    bgColor="#eee"
+                                    color="#848484"
+                                    borderColor="#eee"
+                                ></u-tag>
+                            </view>
+                        </view>
+                        <view class="shop-desc">
+                            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
+                        </view>
+                        <view class="shop-buy">
+                            <view class="price">￥29.9</view>
+                            <view class="buy-btn">
+                                <button
+                                    class="buy-style"
+                                    @tap.stop="handleClick($event)"
+                                >
+                                    加入书架
+                                </button>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="card">
+                    <!-- 内容 -->
+                    <view class="shop-left">
+                        <image src="../../static/1.png" mode="widthFix"></image>
+                    </view>
+                    <view class="shop-right">
+                        <view class="shop-title"> 主题式英语单词画册1 </view>
+                        <view class="shop-tag">
+                            <view class="tag">
+                                <u-tag
+                                    text="已借过"
+                                    shape="circle"
+                                    bgColor="#EDF8D8"
+                                    color="#9FC152"
+                                    borderColor="#EDF8D8"
+                                ></u-tag>
+                            </view>
+                            <view class="tag">
+                                <u-tag
+                                    text="高人气"
+                                    shape="circle"
+                                    bgColor="#FFE8D0"
+                                    color="#DE7A00"
+                                    borderColor="#FFE8D0"
+                                ></u-tag>
+                            </view>
+                            <view class="tag">
+                                <u-tag
+                                    text="已借完"
+                                    shape="circle"
+                                    bgColor="#eee"
+                                    color="#848484"
+                                    borderColor="#eee"
+                                ></u-tag>
+                            </view>
+                        </view>
+                        <view class="shop-desc">
+                            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
+                        </view>
+                        <view class="shop-buy">
+                            <view class="price">￥29.9</view>
+                            <view class="buy-btn">
+                                <button
+                                    class="buy-style"
+                                    @tap.stop="handleClick($event)"
+                                >
+                                    加入书架
+                                </button>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <shop-cart :value="count" />
+        </view>
+        <tab-bar />
+    </view>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            indicator: false,
+            keyword: "",
+            activeLevel: 0,
+            shopList: [1, 2, 3],
+            buyStyle: {
+                width: "100rpx",
+                backgroundColor: "#00CDDA",
+                color: "#fff",
+            },
+            levelList: [
+                {
+                    name: "学前班",
+                    value: 0,
+                },
+                {
+                    name: "一年级",
+                    value: 1,
+                },
+                {
+                    name: "二年级",
+                    value: 2,
+                },
+                {
+                    name: "三年级",
+                    value: 3,
+                },
+                {
+                    name: "四年级",
+                    value: 4,
+                },
+                {
+                    name: "五年级",
+                    value: 5,
+                },
+                {
+                    name: "六年级",
+                    value: 6,
+                },
+            ],
+            count: 0,
+        };
+    },
+    onLoad() {},
+    methods: {
+        onSelectLevel(item) {
+            this.activeLevel = item.value;
+        },
+        onInfo() {
+            uni.navigateTo({
+                url: "/pages/bookMore/index",
+            });
+        },
+        onSearch(value) {
+            console.log("value", value);
+        },
+        handleClick() {
+            this.count++;
+            console.log("点击");
+        },
+    },
+};
+</script>
+
+<style lang="scss" scoped>
+.header {
+    padding: 30rpx 30rpx 0;
+}
+.more {
+    color: #00cdda;
+}
+.shop-cart {
+    width: 65px;
+    height: 65px;
+    background: url("../../static/icon-cart.png") no-repeat center;
+    background-size: 100% auto;
+    color: #fff;
+    position: fixed;
+    bottom: 300rpx;
+    right: 40rpx;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 34px;
+    box-sizing: border-box;
+}
+.layout {
+    padding: 0 30rpx 30rpx;
+    .card-box {
+        background: #fff;
+        border-radius: 20rpx;
+        padding-top: 10rpx;
+        box-shadow: 0px 0px 15px #e8e8e8;
+        margin-bottom: 30rpx;
+        .card {
+            padding: 20rpx;
+            margin-bottom: 30rpx;
+            display: flex;
+            .shop-left {
+                width: 100px;
+                image {
+                    width: 100%;
+                }
+            }
+            .shop-right {
+                flex: 1;
+                padding-left: 15rpx;
+                .shop-title {
+                    font-size: 30rpx;
+                }
+                .shop-desc {
+                    height: 100rpx;
+                    font-size: 24rpx;
+                    color: #9d9d9d;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 3;
+                }
+                .shop-tag {
+                    padding: 10rpx 0;
+                    display: flex;
+                    .tag {
+                        margin-right: 20rpx;
+                    }
+                }
+                .shop-buy {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    .price {
+                        font-size: 28rpx;
+                    }
+                    .buy-btn {
+                        width: 230rpx;
+                        position: relative;
+                        .tip {
+                            min-width: 30rpx;
+                            max-width: 80rpx;
+                            padding: 10rpx;
+                            background: #f56c6c;
+                            color: #fff;
+                            font-size: 14rpx;
+                        }
+                    }
+                    .buy-style {
+                        width: 100%;
+                        border-radius: 40rpx;
+                        text-align: center;
+                        background: #00cdda;
+                        color: #fff;
+                        font-size: 26rpx;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
