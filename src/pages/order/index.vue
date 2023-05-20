@@ -23,6 +23,9 @@
                     </div>
                 </div>
             </div>
+			<div class="book-layout">
+				<shopItem />
+			</div>
             <div class="card-box">
                 <div class="order-info-item">
                     <div class="order-info-title">押金</div>
@@ -64,7 +67,11 @@
 </template>
 
 <script>
+import shopItem from '@/components/shopItem.vue';
 export default {
+	components: {
+		shopItem
+	},
     data() {
         return {
             title: "Hello 学家",

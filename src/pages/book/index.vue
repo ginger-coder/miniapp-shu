@@ -255,6 +255,7 @@ export default {
                 padding-left: 15rpx;
                 .shop-title {
                     font-size: 30rpx;
+					margin-bottom: 20rpx;
                 }
                 .shop-desc {
                     height: 100rpx;
