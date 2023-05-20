@@ -157,41 +157,40 @@ export default {
                 backgroundColor: "#00CDDA",
                 color: "#fff",
             },
-            levelList: [
-                {
-                    name: "学前班",
-                    value: 0,
-                },
-                {
-                    name: "一年级",
-                    value: 1,
-                },
-                {
-                    name: "二年级",
-                    value: 2,
-                },
-                {
-                    name: "三年级",
-                    value: 3,
-                },
-                {
-                    name: "四年级",
-                    value: 4,
-                },
-                {
-                    name: "五年级",
-                    value: 5,
-                },
-                {
-                    name: "六年级",
-                    value: 6,
-                },
-            ],
+            levelList: [],
             count: 0,
         };
     },
     onLoad() {},
+    onShow() {
+        this.initPage();
+    },
+    mounted() {},
     methods: {
+        async initPage() {
+            const initGrade = await this.onGetAllLabel();
+            console.log("111", initGrade);
+            await this.onGetMainBookList(initGrade.id);
+        },
+        onGetAllLabel() {
+            return new Promise((resolve, reject) => {
+                this.$api.getLabelList(1).then((res) => {
+                    this.levelList = res.map((el) => {
+                        return {
+                            name: el.label,
+                            value: el.id,
+                        };
+                    });
+					resolve(res[0])
+                })
+            });
+        },
+        onGetMainBookList(grade) {
+            return this.$api.getGradeBooksByGradeId(grade);
+            then((res) => {
+                console.log("res", res);
+            });
+        },
         onSelectLevel(item) {
             this.activeLevel = item.value;
         },
@@ -255,7 +254,7 @@ export default {
                 padding-left: 15rpx;
                 .shop-title {
                     font-size: 30rpx;
-					margin-bottom: 20rpx;
+                    margin-bottom: 20rpx;
                 }
                 .shop-desc {
                     height: 100rpx;

@@ -6,6 +6,9 @@ import shopCart from '@/components/shopCart.vue';
 import "./uni.promisify.adaptor";
 import api from '@/common/api.js';
 import store from './store';
+import { login } from '@/utils/common';
+
+login();
 
 Vue.component('tab-bar', tabBar);
 Vue.component('shop-cart', shopCart);
