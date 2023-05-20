@@ -5,7 +5,7 @@
         </view>
         <view class="shop-right">
             <view class="shop-title"> 主题式英语单词画册1 </view>
-            <view class="shop-tag">
+            <view class="shop-tag" v-if="shopType == 'item'">
                 <view class="tag">
                     <u-tag
                         text="已借过"
@@ -39,7 +39,7 @@
             </view>
             <view class="shop-buy">
                 <view class="price">￥29.9</view>
-                <view class="buy-style">
+                <view class="buy-style" v-if="shopType == 'item'">
                     <u-button
                         type="primary"
                         text="加入书架"
@@ -53,9 +53,15 @@
 </template>
 
 <script>
+import { strong } from '@dcloudio/vue-cli-plugin-uni/packages/postcss/tags';
 export default {
     name: "shopItem",
-    props: ["value"],
+    props: {
+		shopType: {
+			type: String,
+			default: 'item'
+		}
+	},
     data() {
         return {};
     },

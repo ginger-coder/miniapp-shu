@@ -23,9 +23,9 @@
                     </div>
                 </div>
             </div>
-			<div class="book-layout">
-				<shopItem />
-			</div>
+            <div class="book-layout">
+                <shopItem shop-type="order" />
+            </div>
             <div class="card-box">
                 <div class="order-info-item">
                     <div class="order-info-title">押金</div>
@@ -55,37 +55,105 @@
                 <view class="buy-style">
                     <u-button
                         type="primary"
-                        text="借阅下单"
+                        text="提交下单"
                         shape="circle"
                         color="#00CDDA"
+						@click="open('successDialog')"
                     ></u-button>
                 </view>
             </view>
             <u-safe-bottom></u-safe-bottom>
         </view>
+        <u-popup class="msg-popup" :show="successDialog" :closeOnClickOverlay="false" mode="center" @close="() => close('successDialog')" @open="() => open('successDialog')">
+            <view class="success-container">
+				<view class="title">下单成功</view>
+                <view class="msg-item">请于 2023-02-23 20:23 - 21:30</view>
+                <view class="msg-item">前往 <text class="address">山西省晋中市榆次区顺城西街46号</text></view>
+                <view>取走您的图书哟！</view>
+				<view class="footer">
+					<div class="btn">
+						<u-button
+							type="primary"
+							text="返回修改"
+							shape="circle"
+							color="#00CDDA"
+							class="btn"
+						></u-button>
+					</div>
+					<div class="btn">
+						<u-button
+							type="primary"
+							text="确定"
+							shape="circle"
+							color="#00CDDA"
+							class="btn"
+						></u-button>
+					</div>
+				</view>
+            </view>
+        </u-popup>
     </view>
 </template>
 
 <script>
-import shopItem from '@/components/shopItem.vue';
+import shopItem from "@/components/shopItem.vue";
 export default {
-	components: {
-		shopItem
-	},
+    components: {
+        shopItem,
+    },
     data() {
         return {
             title: "Hello 学家",
             timeDialog: false,
             columns: [["中国", "美国", "日本"]],
+			successDialog: false,
         };
     },
-    onLoad() {},
-    methods: {},
+    onLoad() {
+		
+	},
+    methods: {
+		open(type){
+			this[type] = true;
+		},
+		close(type){
+			this[type] = false;
+		},
+	},
 };
 </script>
 
 <style lang="scss" scoped>
+.msg-popup {
+	width: 80%;
+}
+.success-container {
+	width: 100%;
+	padding: 0 50rpx 0;
+	box-sizing: border-box;
+	.msg-item {
+		margin-bottom: 12px;
+	}
+	.title {
+		font-size: 18px;
+		padding: 50rpx 0;
+		text-align: center;
+	}
+	.address {
+		color: #999
+	}
+	.footer {
+		padding: 100rpx 0 0 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.btn {
+			width: 120px;
+		}
+	}
+}
 .order-container {
+    padding-bottom: 125rpx;
     .footer-layout {
         width: 100%;
         box-shadow: 0px -2px 5px #e8e8e8;
