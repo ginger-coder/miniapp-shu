@@ -19,139 +19,104 @@
         </u-sticky>
         <u-gap></u-gap>
         <view class="layout">
-            <view
-                class="card-box"
-                v-for="(item, index) in shopList"
-                :key="index"
-            >
-                <u-cell
-                    title="思维启蒙"
-                    :border="false"
-                    isLink
-                    :titleStyle="{ fontWeight: 600 }"
-                    :rightIconStyle="{ color: '#00cdda' }"
+            <template v-if="booksList.length">
+                <view
+                    class="card-box"
+                    v-for="item in booksList"
+                    :key="item.classLabelId"
                 >
-                    <text slot="value" class="more" @click="onInfo">更多</text>
-                </u-cell>
-                <view class="card">
-                    <!-- 内容 -->
-                    <view class="shop-left">
-                        <image src="../../static/1.png" mode="widthFix"></image>
-                    </view>
-                    <view class="shop-right">
-                        <view class="shop-title"> 主题式英语单词画册1 </view>
-                        <view class="shop-tag">
-                            <view class="tag">
-                                <u-tag
-                                    text="已借过"
-                                    shape="circle"
-                                    bgColor="#EDF8D8"
-                                    color="#9FC152"
-                                    borderColor="#EDF8D8"
-                                ></u-tag>
-                            </view>
-                            <view class="tag">
-                                <u-tag
-                                    text="高人气"
-                                    shape="circle"
-                                    bgColor="#FFE8D0"
-                                    color="#DE7A00"
-                                    borderColor="#FFE8D0"
-                                ></u-tag>
-                            </view>
-                            <view class="tag">
-                                <u-tag
-                                    text="已借完"
-                                    shape="circle"
-                                    bgColor="#eee"
-                                    color="#848484"
-                                    borderColor="#eee"
-                                ></u-tag>
-                            </view>
+                    <u-cell
+                        :title="item.classLabel"
+                        :border="false"
+                        isLink
+                        :titleStyle="{ fontWeight: 600 }"
+                        :rightIconStyle="{ color: '#00cdda' }"
+                    >
+                        <text
+                            slot="value"
+                            class="more"
+                            @click="onInfo(item.classLabelId)"
+                            >更多</text
+                        >
+                    </u-cell>
+                    <view
+                        class="card"
+                        v-for="book in item.bookInfos"
+                        :key="book.bookId"
+                    >
+                        <!-- 内容 -->
+                        <view class="shop-left">
+                            <image
+                                src="../../static/1.png"
+                                mode="widthFix"
+                            ></image>
                         </view>
-                        <view class="shop-desc">
-                            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
-                        </view>
-                        <view class="shop-buy">
-                            <view class="price">￥29.9</view>
-                            <view class="buy-btn">
-                                <button
-                                    class="buy-style"
-                                    @tap.stop="handleClick($event)"
-                                >
-                                    加入书架
-                                </button>
+                        <view class="shop-right">
+                            <view class="shop-title">{{ book.nickName }}</view>
+                            <view class="shop-tag">
+                                <view class="tag">
+                                    <u-tag
+                                        text="已借过"
+                                        shape="circle"
+                                        bgColor="#EDF8D8"
+                                        color="#9FC152"
+                                        borderColor="#EDF8D8"
+                                    ></u-tag>
+                                </view>
+                                <view class="tag">
+                                    <u-tag
+                                        text="高人气"
+                                        shape="circle"
+                                        bgColor="#FFE8D0"
+                                        color="#DE7A00"
+                                        borderColor="#FFE8D0"
+                                    ></u-tag>
+                                </view>
+                                <view class="tag">
+                                    <u-tag
+                                        text="已借完"
+                                        shape="circle"
+                                        bgColor="#eee"
+                                        color="#848484"
+                                        borderColor="#eee"
+                                    ></u-tag>
+                                </view>
                             </view>
-                        </view>
-                    </view>
-                </view>
-                <view class="card">
-                    <!-- 内容 -->
-                    <view class="shop-left">
-                        <image src="../../static/1.png" mode="widthFix"></image>
-                    </view>
-                    <view class="shop-right">
-                        <view class="shop-title"> 主题式英语单词画册1 </view>
-                        <view class="shop-tag">
-                            <view class="tag">
-                                <u-tag
-                                    text="已借过"
-                                    shape="circle"
-                                    bgColor="#EDF8D8"
-                                    color="#9FC152"
-                                    borderColor="#EDF8D8"
-                                ></u-tag>
+                            <view class="shop-desc">
+                                {{ book.introduction }}
                             </view>
-                            <view class="tag">
-                                <u-tag
-                                    text="高人气"
-                                    shape="circle"
-                                    bgColor="#FFE8D0"
-                                    color="#DE7A00"
-                                    borderColor="#FFE8D0"
-                                ></u-tag>
-                            </view>
-                            <view class="tag">
-                                <u-tag
-                                    text="已借完"
-                                    shape="circle"
-                                    bgColor="#eee"
-                                    color="#848484"
-                                    borderColor="#eee"
-                                ></u-tag>
-                            </view>
-                        </view>
-                        <view class="shop-desc">
-                            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
-                        </view>
-                        <view class="shop-buy">
-                            <view class="price">￥29.9</view>
-                            <view class="buy-btn">
-                                <button
-                                    class="buy-style"
-                                    @tap.stop="handleClick($event)"
-                                >
-                                    加入书架
-                                </button>
+                            <view class="shop-buy">
+                                <view class="price">￥{{ book.price }}</view>
+                                <view class="buy-btn">
+                                    <button
+                                        class="buy-style"
+                                        @tap.stop="handleClick(book)"
+                                    >
+                                        加入书架
+                                    </button>
+                                </view>
                             </view>
                         </view>
                     </view>
                 </view>
+            </template>
+            <view class="empty" v-else>
+                <u-empty mode="data"> </u-empty>
             </view>
-            <shop-cart :value="count" />
         </view>
+		<shop-cart :value="count" />
         <tab-bar />
     </view>
 </template>
 
 <script>
+import _ from "lodash";
 export default {
     data() {
         return {
             indicator: false,
             keyword: "",
             activeLevel: 0,
-            shopList: [1, 2, 3],
             buyStyle: {
                 width: "100rpx",
                 backgroundColor: "#00CDDA",
@@ -159,6 +124,11 @@ export default {
             },
             levelList: [],
             count: 0,
+            booksList: [],
+            queryParams: {
+                classId: 0,
+                gradeId: 0,
+            },
         };
     },
     onLoad() {},
@@ -169,8 +139,8 @@ export default {
     methods: {
         async initPage() {
             const initGrade = await this.onGetAllLabel();
-            console.log("111", initGrade);
-            await this.onGetMainBookList(initGrade.id);
+            this.activeLevel = initGrade.id;
+            await this.onGetMainBookList();
         },
         onGetAllLabel() {
             return new Promise((resolve, reject) => {
@@ -181,18 +151,21 @@ export default {
                             value: el.id,
                         };
                     });
-					resolve(res[0])
-                })
+                    resolve(res[0]);
+                });
             });
         },
-        onGetMainBookList(grade) {
-            return this.$api.getGradeBooksByGradeId(grade);
-            then((res) => {
-                console.log("res", res);
-            });
+        onGetMainBookList() {
+            return this.$api
+                .getGradeBooksByGradeId(this.activeLevel)
+                .then((res) => {
+                    console.log("res", res);
+                    this.booksList = _.cloneDeep(res);
+                });
         },
         onSelectLevel(item) {
             this.activeLevel = item.value;
+            this.onGetMainBookList(item.value);
         },
         onInfo() {
             uni.navigateTo({
@@ -211,6 +184,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty {
+	height: 100%;
+	padding-top: 300rpx;
+}
 .header {
     padding: 30rpx 30rpx 0;
 }
@@ -231,8 +208,14 @@ export default {
     padding-top: 34px;
     box-sizing: border-box;
 }
+.index-container {
+	display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
 .layout {
     padding: 0 30rpx 30rpx;
+	flex: 1;
     .card-box {
         background: #fff;
         border-radius: 20rpx;
