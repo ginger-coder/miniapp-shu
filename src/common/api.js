@@ -29,7 +29,28 @@ export default {
 			hideLoading: false,
 		})
 	},
-	getClassBooksList(gradeId) {
+	joinBookRack(bookId) {
+		return request({
+			url: '/book/joinBookRack/' + bookId,
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
+	getBookRack() {
+		return request({
+			url: '/book/getBookRack',
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
+	deleteCartBook(bookId) {
+		return request({
+			url: '/book/del/' + bookId,
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
+	getClassBooksList(data) {
 		return request({
 			url: '/book/getClassBooks',
 			method: 'POST',
@@ -37,7 +58,7 @@ export default {
 			hideLoading: false,
 		})
 	},
-	getBooksList(gradeId) {
+	getBooksList(data) {
 		return request({
 			url: '/book/list',
 			method: 'POST',

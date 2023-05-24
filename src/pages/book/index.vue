@@ -7,6 +7,7 @@
                     v-model="keyword"
                     @search="onSearch"
                     :showAction="false"
+					:current="activeGrade"
                 ></u-search>
                 <u-tabs
                     :list="levelList"
@@ -116,7 +117,7 @@ export default {
         return {
             indicator: false,
             keyword: "",
-            activeLevel: 0,
+            activeGrade: 0,
             buyStyle: {
                 width: "100rpx",
                 backgroundColor: "#00CDDA",
@@ -139,7 +140,7 @@ export default {
     methods: {
         async initPage() {
             const initGrade = await this.onGetAllLabel();
-            this.activeLevel = initGrade.id;
+            this.activeGrade = initGrade.id;
             await this.onGetMainBookList();
         },
         onGetAllLabel() {
@@ -157,27 +158,27 @@ export default {
         },
         onGetMainBookList() {
             return this.$api
-                .getGradeBooksByGradeId(this.activeLevel)
+                .getGradeBooksByGradeId(this.activeGrade)
                 .then((res) => {
                     console.log("res", res);
                     this.booksList = _.cloneDeep(res);
                 });
         },
         onSelectLevel(item) {
-            this.activeLevel = item.value;
+            this.activeGrade = item.value;
             this.onGetMainBookList(item.value);
         },
-        onInfo() {
+        onInfo(classLabelId) {
             uni.navigateTo({
-                url: "/pages/bookMore/index",
+                url: "/pages/bookMore/index?classLabelId=" + classLabelId + "&gradeId=" + this.activeGrade,
             });
         },
         onSearch(value) {
             console.log("value", value);
         },
-        handleClick() {
-            this.count++;
-            console.log("点击");
+        async handleClick(book) {
+            await this.$api.joinBookRack(book.bookId);
+			this.$toast('加入成功');
         },
     },
 };

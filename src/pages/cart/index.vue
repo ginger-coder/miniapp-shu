@@ -11,34 +11,41 @@
         </u-sticky>
         <u-gap></u-gap>
         <view class="layout">
-            <u-swipe-action>
-                <u-swipe-action-item
-                    :options="options1"
-                    v-for="(item, index) in shopList"
-                    :key="index"
-                    @click="onRemove(item)"
-                >
-                    <view class="swipe-action u-border-bottom">
-                        <view class="swipe-action__content">
-                            <view class="shop-item">
-                                <checkbox class="select"></checkbox>
-                                <view class="shop-image">
-                                    <image
-                                        src="../../static/1.png"
-                                        mode="widthFix"
-                                    ></image>
-                                </view>
-                                <view class="shop-content">
-                                    <view class="shop-title"
-                                        >主题式英语单词画册{{ item }}</view
-                                    >
-                                    <view class="shop-price">￥29.9</view>
+            <checkbox-group @change="onSelectItem">
+                <u-swipe-action>
+                    <u-swipe-action-item
+                        :options="options1"
+                        v-for="(item, index) in bookList"
+                        :key="index"
+                        @click="onRemove(item)"
+                    >
+                        <view class="swipe-action u-border-bottom">
+                            <view class="swipe-action__content">
+                                <view class="shop-item">
+                                    <checkbox
+                                        :value="item.bookId"
+                                        :checked="item.checked"
+                                    />
+                                    <view class="shop-image">
+                                        <image
+                                            src="../../static/1.png"
+                                            mode="widthFix"
+                                        ></image>
+                                    </view>
+                                    <view class="shop-content">
+                                        <view class="shop-title">{{
+                                            item.nickName
+                                        }}</view>
+                                        <view class="shop-price"
+                                            >￥{{ item.price }}</view
+                                        >
+                                    </view>
                                 </view>
                             </view>
                         </view>
-                    </view>
-                </u-swipe-action-item>
-            </u-swipe-action>
+                    </u-swipe-action-item>
+                </u-swipe-action>
+            </checkbox-group>
         </view>
         <view class="footer-layout">
             <view class="content">
@@ -52,6 +59,7 @@
                         text="借阅下单"
                         shape="circle"
                         color="#00CDDA"
+                        @click="goOrder"
                     ></u-button>
                 </view>
             </view>
@@ -61,10 +69,11 @@
 </template>
 
 <script>
+import _ from "lodash";
 export default {
     data() {
         return {
-            shopList: [1, 2, 3, 4],
+            bookList: [],
             options1: [
                 {
                     text: "删除",
@@ -73,7 +82,8 @@ export default {
                     },
                 },
             ],
-            alway: 6,
+            alway: 0,
+            selectBookList: [],
         };
     },
     computed: {
@@ -85,13 +95,54 @@ export default {
             }
         },
     },
-    onLoad() {},
+    onLoad() {
+        this.getCartBookList();
+    },
     methods: {
+        onSelectItem(item) {
+			const values = item.detail.value;
+            this.alway = values.length;
+            for (var i = 0, lenI = this.bookList.length; i < lenI; ++i) {
+                const el = this.bookList[i];
+                if (values.includes(String(el.bookId))) {
+                    this.$set(el, "checked", true);
+                } else {
+                    this.$set(el, "checked", false);
+                }
+            }
+        },
+        goOrder() {
+            const targetBookId = this.bookList
+                .filter((el) => el.checked)
+                .map((el) => el.bookId);
+            console.log("targetBookId", targetBookId);
+        },
         onSearch(value) {
             console.log("value", value);
         },
+        getCartBookList() {
+            this.$api.getBookRack().then((res) => {
+                this.bookList = _.cloneDeep(res?.bookRackInfos || []).map(
+                    (el) => {
+                        return {
+                            ...el,
+                            checked: true,
+                        };
+                    }
+                );
+                this.alway = this.bookList.length;
+            });
+        },
         onRemove(item) {
-            console.log("itrm", item);
+			const deleteBookId = this.bookList.find(el => el.bookId == item.bookId).bookId;
+            this.alway--;
+			this.$api.deleteCartBook(deleteBookId)
+				.then(() => {
+					console.log('移除成功');
+					this.bookList = this.bookList.filter(
+						(el) => el.bookId !== item.bookId
+					);
+				})
         },
     },
 };
@@ -119,12 +170,12 @@ export default {
     position: fixed;
     bottom: 0;
     left: 0;
-	background-color: #fff;
+    background-color: #fff;
     .content {
         display: flex;
         align-items: center;
         justify-content: space-between;
-		padding: 30rpx;
+        padding: 30rpx;
         .footer-left {
             display: flex;
             align-items: center;

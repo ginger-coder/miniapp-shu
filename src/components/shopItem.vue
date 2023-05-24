@@ -4,7 +4,7 @@
             <image src="../static/1.png" mode="widthFix"></image>
         </view>
         <view class="shop-right">
-            <view class="shop-title"> 主题式英语单词画册1 </view>
+            <view class="shop-title">{{ book.nickName }}</view>
             <view class="shop-tag" v-if="shopType == 'item'">
                 <view class="tag">
                     <u-tag
@@ -35,16 +35,17 @@
                 </view>
             </view>
             <view class="shop-desc">
-                介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
+                {{ book.introduction }}
             </view>
             <view class="shop-buy">
-                <view class="price">￥29.9</view>
+                <view class="price">￥{{ book.price }}</view>
                 <view class="buy-style" v-if="shopType == 'item'">
                     <u-button
                         type="primary"
                         text="加入书架"
                         shape="circle"
                         color="#00CDDA"
+						@click="handleClick(book)"
                     ></u-button>
                 </view>
             </view>
@@ -60,6 +61,12 @@ export default {
 		shopType: {
 			type: String,
 			default: 'item'
+		},
+		book: {
+			type: Object,
+			default() {
+				return {};
+			}
 		}
 	},
     data() {
@@ -67,6 +74,9 @@ export default {
     },
     onLoad() {},
     methods: {
+		handleClick() {
+            console.log("点击");
+        },
     },
 };
 </script>
