@@ -51,6 +51,30 @@
 			"style": {
 				"navigationBarTitleText": "订单"
 			}
+		},
+		{
+			"path": "pages/userSchool/index",
+			"style": {
+				"navigationBarTitleText": "宝贝学校信息(必填)",
+				"backgroundColor": "#F5F5FF"
+			}
+
+		},
+		{
+			"path": "pages/userMassage/index",
+			"style": {
+				"navigationBarTitleText": "宝贝基本信息(必填)",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/userHealth/index",
+			"style": {
+				"navigationBarTitleText": "宝贝健康档案",
+				"enablePullDownRefresh": false,
+				"backgroundColor": "#F5F5FF"
+			}
+
 		}
 	],
 	"globalStyle": {
