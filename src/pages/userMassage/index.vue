@@ -7,18 +7,12 @@
 					<view class="text">示例照片</view>
 				</div> -->
                 <div class="user-container-banner-photobox">
-                    <u-upload
-                        name="6"
-                        multiple
-                        :maxCount="1"
+                    <div
+                        class="user-container-banner-photobox-pic"
+                        @click="chooseAvatar"
                     >
-                        <div
-                            class="user-container-banner-photobox-pic"
-                            @click="chooseAvatar"
-                        >
-                            <image :src="showPic" mode="aspectFit"></image>
-                        </div>
-                    </u-upload>
+                        <image :src="showPic" mode="aspectFit"></image>
+                    </div>
                     <div class="user-container-banner-photobox-tip">
                         请上传宝贝头像
                     </div>
@@ -82,10 +76,18 @@
                 </div>
             </div>
         </view>
+        <yhdslCropper
+            ref="yhdslCropper"
+            :quality="1"
+            mode="scale"
+            @uploadImg="uploadImg"
+            scale="1"
+        ></yhdslCropper>
     </view>
 </template>
 
 <script>
+import yhdslCropper from "@/components/yhdsl-cropper/yhdsl-cropper.vue";
 import { env, envConfig } from "@/common/config.js";
 import api from "@/common/api.js";
 let { editUserBaseInfo } = api;
@@ -94,6 +96,9 @@ let { msg_reg } = reg;
 const default_head =
     "https://tal-101-static.oss-cn-beijing.aliyuncs.com/wxapp/parent/mine/icon-default.png";
 export default {
+    components: {
+        yhdslCropper,
+    },
     data() {
         return {
             sexErr: false,
@@ -112,58 +117,23 @@ export default {
             nameErr: false,
         };
     },
-
-    created() {
-        // 监听从裁剪页发布的事件，获得裁剪结果
-        uni.$on("uAvatarCropper", (path) => {
-            console.log("path", path);
-            wx.showLoading({
-                title: "上传中...",
-            });
-            // 可以在此上传到服务端
-            uni.uploadFile({
-                url:
-                    "https://" +
-                    envConfig[env].baseURL +
-                    "/v1/api/infra/upload",
-                filePath: path,
-                name: "file",
-                header: {
-                    "Content-Type": "multipart/form-data",
-                    taltoken: uni.getStorageSync("taltoken"),
-                },
-                formData: {
-                    type: 6,
-                },
-                success: (res) => {
-                    let data = JSON.parse(res.data);
-                    wx.hideLoading();
-                    if (data.code == 200) {
-                        this.$set(this, "showPic", data.data.url);
-                        this.$set(this.uploadData, "pic", data.data.path);
-                    } else {
-                        this.$toast({
-                            title: data.msg,
-                            icon: "none",
-                            duration: 2000,
-                        });
-                    }
-                },
-                fail(err) {
-                    this.$toast({
-                        title: err.msg,
-                        icon: "none",
-                        duration: 2000,
-                    });
-                },
-            });
-        });
-    },
     onLoad() {
         this.init();
     },
     onShow() {},
     methods: {
+        uploadImg(e) {
+            uni.uploadFile({
+                url: "http://localhost:3000/upload/album", //传图片的接口
+                filePath: e,
+                name: "file",
+                fileType: "image",
+                success: (uploadFileRes) => {
+                    // this.url = XXX;(后端传回来的图片地址)
+                    console.log(uploadFileRes.data);
+                },
+            });
+        },
         onAgreeConfirm() {
             this.isShowAgree = false;
             let userInfo = this.getUserInfo();
@@ -261,20 +231,7 @@ export default {
                 });
         },
         chooseAvatar() {
-            // 此为uView的跳转方法，详见"文档-JS"部分，也可以用uni的uni.navigateTo
-            this.$u.route({
-                // 关于此路径，请见下方"注意事项"
-                url: "/uview-ui/components/u-avatar-cropper/u-avatar-cropper",
-                // 内部已设置以下默认参数值，可不传这些参数
-                params: {
-                    // 输出图片宽度，高等于宽，单位px
-                    destWidth: 500,
-                    // 裁剪框宽度，高等于宽，单位px
-                    rectWidth: 300,
-                    // 输出的图片类型，如果'png'类型发现裁剪的图片太大，改成"jpg"即可
-                    fileType: "png",
-                },
-            });
+            this.$refs.yhdslCropper.chooseImage();
         },
         onEditSex(val) {
             this.sexErr = false;
