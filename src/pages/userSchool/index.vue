@@ -117,6 +117,8 @@
             @close="onGradeCancel"
             :actions="gradeList"
             @select="onGreadeConfirm"
+			:safeAreaInsetBottom="true"
+			cancelText="取消"
         ></u-action-sheet>
         <!-- 教材 POP -->
         <u-action-sheet
@@ -124,6 +126,8 @@
             :actions="bookList"
             @close="onBookCancel"
             @select="onBookConfirm"
+			:safeAreaInsetBottom="true"
+			cancelText="取消"
         ></u-action-sheet>
         <!-- 校内数学成绩 POP -->
         <u-action-sheet
@@ -131,6 +135,8 @@
             @close="onNumberCancel"
             :actions="numberList"
             @select="onNumberConfirm"
+			:safeAreaInsetBottom="true"
+			cancelText="取消"
         ></u-action-sheet>
         <!-- 校内语文成绩 POP -->
         <u-action-sheet
@@ -138,6 +144,8 @@
             @close="onChineseCancel"
             :actions="chineseList"
             @select="onChineseConfirm"
+			:safeAreaInsetBottom="true"
+			cancelText="取消"
         ></u-action-sheet>
         <u-keyboard
             mode="number"
@@ -145,6 +153,7 @@
             @backspace="onClassBackspace"
             :mask="false"
             v-model="numberKeyBoardShow"
+			safeAreaInsetBottom
         ></u-keyboard>
     </view>
 </template>
@@ -565,24 +574,16 @@ export default {
             }
         },
         onNumberCancel(e) {
-            if (this.selectNumberDefault[0] == 0) {
-                this.selectNumberDefault = [0];
-            }
+            this.numberModel = false;
         },
         onChineseCancel(e) {
-            if (this.selectChineseDefault[0] == 0) {
-                this.selectChineseDefault = [0];
-            }
+            this.chineseModel = false;
         },
         onBookCancel(e) {
-            if (this.selectBookDefault[0] == 0) {
-                this.selectBookDefault = [0];
-            }
+            this.bookModel = false;
         },
         onGradeCancel(e) {
-            if (this.selectGradeDefault[0] == 0) {
-                this.selectGradeDefault = [0];
-            }
+            this.gradeModel = false;
         },
         openChinese() {
             this.chineseModel = true;
