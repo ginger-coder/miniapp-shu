@@ -11,7 +11,7 @@
         </u-sticky>
         <u-gap></u-gap>
         <view class="layout">
-            <checkbox-group @change="onSelectItem">
+            <checkbox-group @change="onSelectItem" v-if="bookList.length">
                 <u-swipe-action>
                     <u-swipe-action-item
                         :options="options1"
@@ -46,6 +46,9 @@
                     </u-swipe-action-item>
                 </u-swipe-action>
             </checkbox-group>
+			<view class="empty" v-else>
+                <u-empty mode="data"> </u-empty>
+            </view>
         </view>
         <view class="footer-layout">
             <view class="content">
@@ -149,6 +152,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty {
+	height: 100%;
+	padding-top: 300rpx;
+}
 .swipe-action {
     &__content {
         padding: 25rpx 0;
