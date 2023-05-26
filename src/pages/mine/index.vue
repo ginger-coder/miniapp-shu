@@ -90,6 +90,10 @@ export default {
     data() {
         return {
             headImg: defaultImg,
+			userInfo: {
+				name: '用户名',
+				grade: 1
+			}
         };
     },
     onLoad() {
@@ -248,8 +252,8 @@ export default {
             flex-direction: column;
             align-items: center;
             padding-top: 150rpx;
-			background: url("https://tal-101-static.oss-cn-beijing.aliyuncs.com/wxapp/parent/mine/icon-mine-bg.png");
-			background-size: 100% auto;
+			background: url("@/static/mine/icon-mine-bg.png");
+			background-size: 105% auto;
 			background-repeat: no-repeat;
 
             &-cn {

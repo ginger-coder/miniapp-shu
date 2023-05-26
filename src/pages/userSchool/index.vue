@@ -275,13 +275,10 @@ export default {
         });
     },
     created() {},
-    async onLoad() {
-        const systemInfo = wx.getSystemInfoSync();
-        this.wh = systemInfo.windowHeight;
-
-        let userInfo = uni.getStorageSync("userInfo");
-        userInfo = JSON.parse(userInfo);
-        this.initSchoolData(userInfo);
+    onLoad() {
+        // let userInfo = uni.getStorageSync("userInfo");
+        // userInfo = JSON.parse(userInfo);
+        // this.initSchoolData(userInfo);
     },
     methods: {
         openClassNumber() {
@@ -680,6 +677,8 @@ export default {
     box-sizing: border-box;
     position: relative;
     padding-bottom: 180rpx;
+	height: 100vh;
+	box-sizing: border-box;
 
     .user-container-msg-save {
         height: 178rpx;
@@ -715,11 +714,9 @@ export default {
 
     &-offset {
         &-item {
-            width: 100%;
             display: flex;
             align-items: center;
             height: 100rpx;
-            width: 100%;
             background: #ffffff;
             border-radius: 20rpx;
             border: 2rpx solid rgba(185, 185, 215, 0.2);
