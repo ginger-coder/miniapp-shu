@@ -50,10 +50,10 @@ export default class Request {
                     let response = res.data;
                     if (response.code == 200) {
                         resolve(response.data);
-                        return;
                     } else {
 						uni.showToast({
-							content: res.msg
+							icon: 'none',
+							title: response.msg
 						})
                     }
                 },

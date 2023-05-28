@@ -66,4 +66,26 @@ export default {
 			hideLoading: false,
 		})
 	},
+	onPlaceOrder(data) {
+		return request({
+			url: '/order/placeOrder',
+			method: 'POST',
+			data: data, 
+			hideLoading: false,
+		})
+	},
+	getTmpSecret() {
+		return request({
+			url: '/cos/getTmpSecret',
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
+	bindingPhone(code) {
+		return request({
+			url: '/bindingPhone/' + code,
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
 };

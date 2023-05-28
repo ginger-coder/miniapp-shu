@@ -88,9 +88,7 @@
 
 <script>
 import yhdslCropper from "@/components/yhdsl-cropper/yhdsl-cropper.vue";
-import { env, envConfig } from "@/common/config.js";
-import api from "@/common/api.js";
-let { editUserBaseInfo } = api;
+import upload from '@/common/upload';
 import reg from "@/utils/constant.js";
 let { msg_reg } = reg;
 const default_head =
@@ -123,16 +121,7 @@ export default {
     onShow() {},
     methods: {
         uploadImg(e) {
-            uni.uploadFile({
-                url: "http://localhost:3000/upload/album", //传图片的接口
-                filePath: e,
-                name: "file",
-                fileType: "image",
-                success: (uploadFileRes) => {
-                    // this.url = XXX;(后端传回来的图片地址)
-                    console.log(uploadFileRes.data);
-                },
-            });
+            upload(e);
         },
         onAgreeConfirm() {
             this.isShowAgree = false;
@@ -203,32 +192,32 @@ export default {
                 });
                 return;
             }
-            editUserBaseInfo({
-                ...uploadData,
-            })
-                .then((res) => {
-                    this.nameErr = false;
-                    this.sexErr = false;
-                    wx.hideLoading();
-                    wx.showToast({
-                        title: "保存成功",
-                        icon: "success",
-                        duration: 2000,
-                    });
-                    setTimeout((e) => {
-                        if (!this.isFirst) {
-                            uni.navigateBack();
-                        } else {
-                            uni.navigateTo({
-                                url: "/pages/UserSchool/UserSchool",
-                            });
-                        }
-                    }, 400);
-                })
-                .catch((e) => {
-                    this.nameErr = false;
-                    this.sexErr = false;
-                });
+        //     editUserBaseInfo({
+        //         ...uploadData,
+        //     })
+        //         .then((res) => {
+        //             this.nameErr = false;
+        //             this.sexErr = false;
+        //             wx.hideLoading();
+        //             wx.showToast({
+        //                 title: "保存成功",
+        //                 icon: "success",
+        //                 duration: 2000,
+        //             });
+        //             setTimeout((e) => {
+        //                 if (!this.isFirst) {
+        //                     uni.navigateBack();
+        //                 } else {
+        //                     uni.navigateTo({
+        //                         url: "/pages/UserSchool/UserSchool",
+        //                     });
+        //                 }
+        //             }, 400);
+        //         })
+        //         .catch((e) => {
+        //             this.nameErr = false;
+        //             this.sexErr = false;
+        //         });
         },
         chooseAvatar() {
             this.$refs.yhdslCropper.chooseImage();

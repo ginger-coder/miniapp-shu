@@ -159,17 +159,45 @@ export default {
             columns: [["中国", "美国", "日本"]],
             successDialog: false,
             authDialog: false,
+            orderData: {
+                address: "",
+                bookIds: [],
+                borrowEndTime: "",
+                borrowStartTime: "",
+                fetchEndTime: "",
+                fetchStartTime: "",
+                remark: "",
+            },
         };
     },
     onLoad() {},
     methods: {
         getPhoneNumber(event) {
-            let { encryptedData, errMsg, iv, code } = event;
+            console.log("event", event);
+            let { encryptedData, errMsg, iv, code } = event.detail;
             if (errMsg === "getPhoneNumber:ok") {
-                
+                this.$api.bindingPhone(code).then((res) => {
+                    // 绑定成功，跳转下单
+					this.onPlaceOrder();
+                });
             }
         },
+        onPlaceOrder() {
+            this.$api.onPlaceOrder(this.orderData)
+				.then(res => {
+					open('successDialog');
+				})
+        },
         open(type) {
+            if (type == "authDialog") {
+                const isBindPhone = uni.getStorageSync("isBindPhone");
+                console.log("isBindPhone", isBindPhone);
+                if (isBindPhone) {
+                    // 跳转下单
+					this.onPlaceOrder();
+                    return;
+                }
+            }
             this[type] = true;
         },
         close(type) {
