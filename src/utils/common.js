@@ -8,6 +8,7 @@ export const login = () => {
 					.then(res => {
 						// replace(/\"/g, '')
 						uni.setStorageSync('token', res.token.replace(/\"/g, ''));
+						uni.setStorageSync('isBindingPhone', res.isBindingPhone);
 					})
             } else {
                 console.log("登录失败！" + res.errMsg);

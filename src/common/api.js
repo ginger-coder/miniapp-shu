@@ -88,4 +88,12 @@ export default {
 			hideLoading: false,
 		})
 	},
+	getBookRetrieval(data) {
+		return request({
+			url: '/book/getBookRetrieval',
+			method: 'POST',
+			data: data, 
+			hideLoading: false,
+		})
+	},
 };

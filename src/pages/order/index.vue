@@ -168,25 +168,35 @@ export default {
                 fetchStartTime: "",
                 remark: "",
             },
+            bookIds: [],
         };
     },
-    onLoad() {},
+    onLoad({ books }) {
+		console.log(books);
+        this.bookIds = books.split(",").map(el => Number(el));
+		this.getOrderInfo();
+    },
     methods: {
+        getOrderInfo() {
+            this.$api.getBookRetrieval(this.bookIds)
+				.then(res => {
+					console.log('res', res);
+				})
+        },
         getPhoneNumber(event) {
             console.log("event", event);
             let { encryptedData, errMsg, iv, code } = event.detail;
             if (errMsg === "getPhoneNumber:ok") {
                 this.$api.bindingPhone(code).then((res) => {
                     // 绑定成功，跳转下单
-					this.onPlaceOrder();
+                    this.onPlaceOrder();
                 });
             }
         },
         onPlaceOrder() {
-            this.$api.onPlaceOrder(this.orderData)
-				.then(res => {
-					open('successDialog');
-				})
+            this.$api.onPlaceOrder(this.orderData).then((res) => {
+                open("successDialog");
+            });
         },
         open(type) {
             if (type == "authDialog") {
@@ -194,7 +204,7 @@ export default {
                 console.log("isBindPhone", isBindPhone);
                 if (isBindPhone) {
                     // 跳转下单
-					this.onPlaceOrder();
+                    this.onPlaceOrder();
                     return;
                 }
             }

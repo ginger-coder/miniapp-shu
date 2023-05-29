@@ -46,14 +46,16 @@
                     </u-swipe-action-item>
                 </u-swipe-action>
             </checkbox-group>
-			<view class="empty" v-else>
+            <view class="empty" v-else>
                 <u-empty mode="data"> </u-empty>
             </view>
         </view>
         <view class="footer-layout">
             <view class="content">
                 <div class="footer-left">
-                    <checkbox class="all-select"></checkbox>
+                    <checkbox-group @change="onSelectAll">
+                        <checkbox class="all-select" :checked="allChecked"> 全选 </checkbox>
+                    </checkbox-group>
                     <view class="desc"> 已选：{{ sum }}本，每次限5本 </view>
                 </div>
                 <view class="buy-style">
@@ -87,6 +89,7 @@ export default {
             ],
             alway: 0,
             selectBookList: [],
+			allChecked: true,
         };
     },
     computed: {
@@ -103,7 +106,7 @@ export default {
     },
     methods: {
         onSelectItem(item) {
-			const values = item.detail.value;
+            const values = item.detail.value;
             this.alway = values.length;
             for (var i = 0, lenI = this.bookList.length; i < lenI; ++i) {
                 const el = this.bookList[i];
@@ -113,12 +116,35 @@ export default {
                     this.$set(el, "checked", false);
                 }
             }
+			const isAllChecked = this.bookList.every(el => el.checked);
+			if(isAllChecked) {
+				this.allChecked = true;
+			} else {
+				this.allChecked = false;
+			}
         },
+		onSelectAll(item) {
+			for (var i = 0, lenI = this.bookList.length; i < lenI; ++i) {
+                const el = this.bookList[i];
+				if(item.detail.value.length) {
+					this.$set(el, "checked", true);
+				} else {
+					this.$set(el, "checked", false);
+				}
+            }
+			this.alway = this.bookList.length;
+		},
         goOrder() {
-            const targetBookId = this.bookList
-                .filter((el) => el.checked)
-                .map((el) => el.bookId);
-            console.log("targetBookId", targetBookId);
+			const targetBookId = this.bookList.filter((el) => el.checked)
+			if(!targetBookId?.length) {
+				this.$toast('请选择订单后，再提交');
+				return;
+			}
+			console.log('targetBookId', targetBookId);
+			const subitBookIds = targetBookId.map(el => el.bookId).join(',');
+            uni.navigateTo({
+                url: "/pages/order/index?books=" + subitBookIds,
+            });
         },
         onSearch(value) {
             console.log("value", value);
@@ -137,15 +163,16 @@ export default {
             });
         },
         onRemove(item) {
-			const deleteBookId = this.bookList.find(el => el.bookId == item.bookId).bookId;
+            const deleteBookId = this.bookList.find(
+                (el) => el.bookId == item.bookId
+            ).bookId;
             this.alway--;
-			this.$api.deleteCartBook(deleteBookId)
-				.then(() => {
-					console.log('移除成功');
-					this.bookList = this.bookList.filter(
-						(el) => el.bookId !== item.bookId
-					);
-				})
+            this.$api.deleteCartBook(deleteBookId).then(() => {
+                console.log("移除成功");
+                this.bookList = this.bookList.filter(
+                    (el) => el.bookId !== item.bookId
+                );
+            });
         },
     },
 };
@@ -153,8 +180,8 @@ export default {
 
 <style lang="scss" scoped>
 .empty {
-	height: 100%;
-	padding-top: 300rpx;
+    height: 100%;
+    padding-top: 300rpx;
 }
 .swipe-action {
     &__content {
@@ -189,6 +216,7 @@ export default {
         }
         .desc {
             color: #a7a7a7;
+			margin-left: 24rpx;
         }
     }
 }
