@@ -5,13 +5,13 @@
                 <div class="order-info-item">
                     <div class="order-info-title">取书地址</div>
                     <div class="order-info-content">
-                        山西省晋中市榆次区顺城西街46号
+                        {{orderData.address}}
                     </div>
                 </div>
                 <div class="order-info-item">
                     <div class="order-info-title">取书时间</div>
-                    <div class="order-info-content">
-                        山西省晋中市榆次区顺城西街46号
+                    <div class="order-info-content" @click="onOpenTimeModal">
+                        {{orderData.fetchStartTime}}-{{orderData.fetchEndTime}}
                     </div>
                 </div>
                 <div class="order-info-item">
@@ -143,15 +143,28 @@
                 </view>
             </view>
         </u-popup>
+		<u-action-sheet
+            :show="readTimeModal"
+            @close="onCloseTimeModal"
+            :actions="readTimeList"
+            @select="onSelectReadTime"
+			:safeAreaInsetBottom="true"
+			cancelText="取消"
+        ></u-action-sheet>
     </view>
 </template>
 
 <script>
+import _ from 'lodash';
 import shopItem from "@/components/shopItem.vue";
 export default {
     components: {
         shopItem,
     },
+	// :show="readTimeModal"
+    //         @close="onCloseTimeModal"
+    //         :actions="readTimeList"
+    //         @select="onSelectReadTime"
     data() {
         return {
             title: "Hello 学家",
@@ -169,18 +182,50 @@ export default {
                 remark: "",
             },
             bookIds: [],
+			readTimeModal: false,
+			readTimeList: [],
+
         };
     },
     onLoad({ books }) {
-		console.log(books);
-        this.bookIds = books.split(",").map(el => Number(el));
+        this.orderData.bookIds = books.split(",").map(el => Number(el));
 		this.getOrderInfo();
     },
     methods: {
+		onOpenTimeModal() {
+			this.readTimeModal = true;
+		},
+		onCloseTimeModal() {
+			this.readTimeModal = false;
+		},
+		onSelectReadTime(e) {
+			console.log('onSelectReadTime', e);
+			this.orderData.fetchStartTime = e.value.split('-')[0];
+			this.orderData.fetchEndTime = e.value.split('-')[1];
+		},
+		formatReadTime(time) {
+			return `${time < 10 ? '0'+ time : time}`;
+		},
         getOrderInfo() {
-            this.$api.getBookRetrieval(this.bookIds)
+            this.$api.getBookRetrieval(this.orderData.bookIds)
 				.then(res => {
 					console.log('res', res);
+					this.orderData.address = res.address?.length || res.address[0];
+					const reatTimeOptions = [];
+					for (const key in res.fetchBook) {
+						if (Object.hasOwnProperty.call(res.fetchBook, key)) {
+							const item = res.fetchBook[key];
+							for (let i = 0; i < item.length; i++) {
+								const el = item[i];
+								reatTimeOptions.push({
+									value: `${key} ${formatReadTime(el.startHour)}:${formatReadTime(el.startMinute)}-${formatReadTime(el.endHour)}:${formatReadTime(el.endMinute)}`,
+									name: `${key} ${formatReadTime(el.startHour)}:${formatReadTime(el.startMinute)}-${formatReadTime(el.endHour)}:${formatReadTime(el.endMinute)}`,
+									el
+								})
+							}
+						}
+					}
+					this.readTimeList = _.cloneDeep(reatTimeOptions);
 				})
         },
         getPhoneNumber(event) {
