@@ -55,6 +55,7 @@ export default class Request {
 							icon: 'none',
 							title: response.msg
 						})
+						reject(response);
                     }
                 },
                 //请求失败
