@@ -18,7 +18,7 @@
                     :book="item"
                 />
             </template>
-			<view class="empty" v-else>
+            <view class="empty" v-else>
                 <u-empty mode="data"> </u-empty>
             </view>
         </view>
@@ -39,15 +39,17 @@ export default {
             queryParams: {
                 classId: 0,
                 gradeId: 0,
+                page: 1,
+                size: 10,
             },
             bookList: [],
         };
     },
     onLoad({ classLabelId = 0, gradeId = 0 }) {
-        this.queryParams = {
+        Object.assign(this.queryParams, {
             classId: Number(classLabelId),
             gradeId: Number(gradeId),
-        };
+        });
         this.querBookList();
     },
     methods: {
@@ -55,8 +57,24 @@ export default {
             console.log("value", value);
         },
         querBookList() {
+			// author: null
+			// bookId: 12
+			// classLabel: "语言启蒙"
+			// classLabelId: 9
+			// cover: null
+			// createTime: null
+			// gradeLabel: "学龄前"
+			// gradeLabelId: 1
+			// introduction: "简介测试231313简介测试简介测试啊大大1211414"
+			// isbn: "9789865881982"
+			// nickName: "主题式英语单词画册3"
+			// press: null
+			// price: 100
+			// recommendLabel: null
+			// recommendLabelId: null
+			// updateTime: null
             this.$api.getClassBooksList(this.queryParams).then((res) => {
-                this.bookList = _.cloneDeep(res || []);
+                this.bookList = _.cloneDeep(res.records || []);
             });
         },
     },
@@ -65,8 +83,8 @@ export default {
 
 <style lang="scss" scoped>
 .empty {
-	height: 100%;
-	padding-top: 300rpx;
+    height: 100%;
+    padding-top: 300rpx;
 }
 .header {
     padding: 30rpx 30rpx 0;

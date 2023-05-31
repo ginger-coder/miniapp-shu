@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import { strong } from '@dcloudio/vue-cli-plugin-uni/packages/postcss/tags';
 export default {
     name: "shopItem",
     props: {
@@ -74,8 +73,9 @@ export default {
     },
     onLoad() {},
     methods: {
-		handleClick() {
-            console.log("点击");
+		async handleClick(book) {
+            await this.$api.joinBookRack(book.bookId);
+			this.$toast('加入成功');
         },
     },
 };

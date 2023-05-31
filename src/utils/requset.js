@@ -53,7 +53,7 @@ export default class Request {
                     } else {
 						uni.showToast({
 							icon: 'none',
-							title: response.msg
+							title: response?.msg || '请求失败'
 						})
 						reject(response);
                     }

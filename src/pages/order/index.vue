@@ -17,39 +17,36 @@
                 <div class="order-info-item">
                     <div class="order-info-title">借阅日期</div>
                     <div class="order-info-content">
-                        <span>2023-03-09</span>
-                        <span>至</span>
-                        <span>2023-03-09</span>
+                        {{ borrowDate }}
                     </div>
                 </div>
             </div>
-            <div class="book-layout">
+            <div class="book-layout" v-if="pageType == 'info'">
                 <shopItem shop-type="order" />
             </div>
             <div class="card-box">
                 <div class="order-info-item">
-                    <div class="order-info-title">押金</div>
+                    <div class="order-info-title">租金</div>
                     <div class="order-info-content">
-                        <span class="money">￥0</span>
+                        <span class="money">{{ rentMoney }}</span>
                         <span>会员免租金</span>
                     </div>
                 </div>
                 <div class="order-info-item">
                     <div class="order-info-title">押金</div>
                     <div class="order-info-content">
-                        <span class="money">￥200</span>
+                        <span class="money">{{ depositMoney }}</span>
                         <span>已总价的70%</span>
                     </div>
                 </div>
                 <div class="order-info-item">
                     <div class="order-info-title">规则</div>
                     <div class="order-info-content">
-                        这是规则这是规则这是规则这是规则这是规则这是规则
+                        {{ introduction }}
                     </div>
                 </div>
             </div>
         </div>
-        <u-picker :show="timeDialog" :columns="columns"></u-picker>
         <view class="footer-layout">
             <view class="content">
                 <view class="buy-style">
@@ -74,12 +71,10 @@
         >
             <view class="success-container">
                 <view class="title">下单成功</view>
-                <view class="msg-item">请于 2023-02-23 20:23 - 21:30</view>
+                <view class="msg-item">请于 {{ fetchTime }}</view>
                 <view class="msg-item"
                     >前往
-                    <text class="address"
-                        >山西省晋中市榆次区顺城西街46号</text
-                    ></view
+                    <text class="address">{{ orderData.address }}</text></view
                 >
                 <view>取走您的图书哟！</view>
                 <view class="footer">
@@ -156,20 +151,14 @@
 
 <script>
 import _ from "lodash";
+import dayjs from "dayjs";
 import shopItem from "@/components/shopItem.vue";
 export default {
     components: {
         shopItem,
     },
-    // :show="readTimeModal"
-    //         @close="onCloseTimeModal"
-    //         :actions="readTimeList"
-    //         @select="onSelectReadTime"
     data() {
         return {
-            title: "Hello 学家",
-            timeDialog: false,
-            columns: [["中国", "美国", "日本"]],
             successDialog: false,
             authDialog: false,
             orderData: {
@@ -181,11 +170,17 @@ export default {
                 fetchStartTime: "",
                 remark: "",
                 fetchTime: "",
+                borrowTime: "",
             },
             bookIds: [],
             readTimeModal: false,
             readTimeList: [],
             isBindingPhone: false,
+            introduction: "",
+            rent: 0,
+            deposit: 0,
+            borrowCycle: 0,
+            pageType: "order", // info 订单详情
         };
     },
     onLoad({ books }) {
@@ -200,10 +195,36 @@ export default {
                 return "请选择取书时间";
             }
         },
+        rentMoney() {
+            if (this.rent) {
+                return "￥" + this.rent;
+            }
+            return "";
+        },
+        depositMoney() {
+            if (this.deposit) {
+                return "￥" + this.deposit;
+            }
+            return "";
+        },
+        borrowDate() {
+            if (this.borrowCycle && this.orderData.fetchEndTime) {
+                const endTime =
+                    dayjs(this.orderData.fetchEndTime).valueOf() +
+                    1000 * 60 * 60 * 24 * this.borrowCycle;
+                console.log("endTime", endTime);
+                return (
+                    this.orderData.fetchEndTime +
+                    " 至 " +
+                    dayjs(endTime).format("YYYY-MM-DD HH:mm")
+                );
+            }
+            return "";
+        },
     },
-	onHide() {
-		clearTimeout(this.timer);
-	},
+    onHide() {
+        clearTimeout(this.timer);
+    },
     methods: {
         onOpenTimeModal() {
             this.readTimeModal = true;
@@ -212,8 +233,7 @@ export default {
             this.readTimeModal = false;
         },
         onSelectReadTime(e) {
-            console.log("onSelectReadTime", e);
-            this.orderData.fetchTime = e.day + " " + e.start + ":" + e.end;
+            this.orderData.fetchTime = e.day + " " + e.start + "-" + e.end;
             this.orderData.fetchStartTime = e.day + " " + e.start;
             this.orderData.fetchEndTime = e.day + " " + e.end;
         },
@@ -224,9 +244,12 @@ export default {
             this.$api
                 .getBookRetrieval(this.orderData.bookIds)
                 .then((res) => {
-                    console.log("res", res);
                     this.isBindingPhone = res.isBindingPhone;
                     this.orderData.address = res.address[0];
+                    this.introduction = res.introduction;
+                    this.rent = res.rent;
+                    this.deposit = res.deposit;
+                    this.borrowCycle = res.borrowCycle;
                     const reatTimeOptions = [];
                     for (const key in res.fetchBook) {
                         if (Object.hasOwnProperty.call(res.fetchBook, key)) {
@@ -257,10 +280,10 @@ export default {
                     this.readTimeList = _.cloneDeep(reatTimeOptions);
                 })
                 .catch((error) => {
-					this.timer = setTimeout(() => {
-						uni.navigateBack();
-					}, 1000);
-				});
+                    this.timer = setTimeout(() => {
+                        uni.navigateBack();
+                    }, 1000);
+                });
         },
         getPhoneNumber(event) {
             console.log("event", event);
@@ -280,6 +303,14 @@ export default {
         },
         open(type) {
             if (type == "authDialog") {
+                if (!this.orderData.fetchTime) {
+                    this.$toast("请选择取书时间");
+                    return;
+                }
+                if (!this.orderData.borrowTime) {
+                    this.$toast("请选择借阅时间");
+                    return;
+                }
                 if (this.isBindPhone) {
                     // 跳转下单
                     this.onPlaceOrder();
