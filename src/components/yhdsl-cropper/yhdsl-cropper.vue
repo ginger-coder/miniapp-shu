@@ -104,6 +104,7 @@
 		 */
 		data() {
 			return {
+				file: "",
 				imageSrc: "",
 				isShow: false,
 				isShowImg: false,
@@ -189,6 +190,7 @@
 						if(res.tempFiles[0].size / 1024 < 1024) {
 							_this.setData({
 								imageSrc: res.tempFilePaths[0],
+								file: res
 							});
 							_this.loadImage();
 							_this.isShow = true;

@@ -55,7 +55,7 @@
 		{
 			"path": "pages/userSchool/index",
 			"style": {
-				"navigationBarTitleText": "宝贝学校信息(必填)",
+				"navigationBarTitleText": "宝贝学校信息",
 				"backgroundColor": "#F5F5FF"
 			}
 
@@ -63,8 +63,7 @@
 		{
 			"path": "pages/userMassage/index",
 			"style": {
-				"navigationBarTitleText": "宝贝基本信息(必填)",
-				"navigationBarTextStyle": "white"
+				"navigationBarTitleText": "宝贝基本信息"
 			}
 		},
 		{

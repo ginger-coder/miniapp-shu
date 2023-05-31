@@ -113,6 +113,7 @@ export default {
             isChange: false, // 是否有数据改变
 
             nameErr: false,
+			upload,
         };
     },
     onLoad() {
@@ -120,27 +121,12 @@ export default {
     },
     onShow() {},
     methods: {
-        uploadImg(e) {
-            upload(e);
+        uploadImg(imagePath) {
+            upload(imagePath, (fileURL) => {
+				console.log('fileURL', fileURL);
+			});
         },
-        onAgreeConfirm() {
-            this.isShowAgree = false;
-            let userInfo = this.getUserInfo();
-            uni.setStorageSync("isAgreeRead_" + userInfo.id, true);
-            this.$u.route({
-                // 关于此路径，请见下方"注意事项"
-                url: "/uview-ui/components/u-avatar-cropper/u-avatar-cropper",
-                // 内部已设置以下默认参数值，可不传这些参数
-                params: {
-                    // 输出图片宽度，高等于宽，单位px
-                    destWidth: 500,
-                    // 裁剪框宽度，高等于宽，单位px
-                    rectWidth: 300,
-                    // 输出的图片类型，如果'png'类型发现裁剪的图片太大，改成"jpg"即可
-                    fileType: "png",
-                },
-            });
-        },
+
         getUserInfo() {
             let userInfo = uni.getStorageSync("userInfo");
             return JSON.parse(userInfo);
@@ -170,26 +156,20 @@ export default {
             };
         },
         saveUserInfo() {
-            wx.showLoading({
+            uni.showLoading({
                 title: "保存中...",
             });
             let { uploadData } = this;
             if (uploadData.sex != 1 && uploadData.sex != 2) {
-                wx.hideLoading();
+                uni.hideLoading();
                 this.sexErr = true;
-                wx.showToast({
-                    title: "请选择宝贝性别",
-                    icon: "none",
-                });
+                this.$toast('请选择宝贝性别');
                 return;
             }
             if (!msg_reg.test(uploadData.name)) {
                 wx.hideLoading();
                 this.nameErr = true;
-                wx.showToast({
-                    title: "请输入2-12位的字母或汉字",
-                    icon: "none",
-                });
+				this.$toast('请输入2-12位的字母或汉字');
                 return;
             }
         //     editUserBaseInfo({

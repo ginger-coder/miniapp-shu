@@ -3839,12 +3839,13 @@ core-util-is@~1.0.0:
   resolved "https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
-cos-js-sdk-v5@^1.4.17:
-  version "1.4.17"
-  resolved "https://registry.yarnpkg.com/cos-js-sdk-v5/-/cos-js-sdk-v5-1.4.17.tgz#b8db1c533999415de85fa4014e3abe6de3daecbd"
-  integrity sha512-QIHgeEhlK3JrEeBz2qHD61wcN33M4NDfok2LrVdkGkyKXX86xMsBVBGqiVB0hG2BMpmb3AK9F6aAE6zBjndIqg==
+cos-wx-sdk-v5@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/cos-wx-sdk-v5/-/cos-wx-sdk-v5-1.4.10.tgz#3b707b1904b1bb83c2eb05fa249ddb766dbdcfd3"
+  integrity sha512-q2/VtECCHAKUhrOxWq43BEpAgFY+0vexu/M3Cf3JV7fWaoJ+wLqeVvaOM1EZzMd3NS1nbAjqCCpuaVna67sFWg==
   dependencies:
     "@xmldom/xmldom" "^0.8.6"
+    mime "^2.4.6"
 
 cosmiconfig@^7.0.0:
   version "7.1.0"
@@ -7187,7 +7188,7 @@ mime@1.6.0:
   resolved "https://registry.npmmirror.com/mime/-/mime-1.6.0.tgz"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
 
-mime@^2.4.4:
+mime@^2.4.4, mime@^2.4.6:
   version "2.6.0"
   resolved "https://registry.npmmirror.com/mime/-/mime-2.6.0.tgz"
   integrity sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==
@@ -10191,6 +10192,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmmirror.com/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 uview-ui@^2.0.31:
   version "2.0.31"
