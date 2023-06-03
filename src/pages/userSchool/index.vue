@@ -486,9 +486,10 @@ export default {
                         uni.navigateBack();
                     }, 500);
                 })
-                .catch((e) => {
-                    this.cleanErr();
-                });
+				.finally(() => {
+					this.cleanErr();
+					uni.hideLoading();
+				})
         },
         openNumber() {
             this.numberModel = true;

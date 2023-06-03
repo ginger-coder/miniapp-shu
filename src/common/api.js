@@ -112,6 +112,14 @@ export default {
 			hideLoading: false,
 		})
 	},
+	updateHealth(data) {
+		return request({
+			url: '/student/updateHealth',
+			method: 'POST',
+			data: data, 
+			hideLoading: false,
+		})
+	},
 	// 字典/dict/school
 	getDict(prop) {
 		return request({

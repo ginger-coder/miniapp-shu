@@ -7,7 +7,7 @@
                     <u--textarea
                         class="health-content-item-text-textarea"
                         placeholder-style="color : #B9B9D7"
-                        v-model="uploadData.commonlyDrug"
+                        v-model="uploadData.useDrug"
                         :maxlength="maxLength"
                         placeholder="请填写宝贝的常用药物(选填)"
                         @click="handleClickInputWrap"
@@ -23,7 +23,7 @@
                     <u--textarea
                         class="health-content-item-text-textarea"
                         placeholder-style="color : #B9B9D7"
-                        v-model="uploadData.allergen"
+                        v-model="uploadData.allergySource"
                         :maxlength="maxLength"
                         placeholder="是否有过敏源(选填)"
                         @click="handleClickInputWrap"
@@ -39,7 +39,7 @@
                     <u--textarea
                         class="health-content-item-text-textarea"
                         placeholder-style="color : #B9B9D7"
-                        v-model="uploadData.dislikeFood"
+                        v-model="uploadData.cannotEat"
                         :maxlength="maxLength"
                         placeholder="宝贝不能吃什么，不喜欢吃什么(选填)"
                         @click="handleClickInputWrap"
@@ -55,7 +55,7 @@
                     <u--textarea
                         class="health-content-item-text-textarea"
                         placeholder-style="color : #B9B9D7"
-                        v-model="uploadData.enjoin"
+                        v-model="uploadData.otherMatter"
                         placeholder="请填写(选填)"
                         :maxlength="maxLength"
                         @click="handleClickInputWrap"
@@ -89,10 +89,10 @@ export default {
             maxLength: 50,
             // color : #B9B9D7: '#B9B9D7',
             uploadData: {
-                commonlyDrug: "", // 常用药
-                allergen: "", // 过敏源
-                dislikeFood: "", // 不能吃
-                enjoin: "", // 备注
+                useDrug: "", // 常用药
+                allergySource: "", // 过敏源
+                cannotEat: "", // 不能吃
+                otherMatter: "", // 备注
             },
 
             isChange: false, // 数据是否改变
@@ -112,9 +112,6 @@ export default {
             this.isChange = true;
         },
         backEdit() {
-            let { commonlyDrug, allergen, dislikeFood, enjoin } =
-                this.uploadData;
-            // if(commonlyDrug || allergen || dislikeFood || enjoin){
             if (this.isChange) {
                 uni.showModal({
                     title: "确定离开?",
@@ -135,10 +132,10 @@ export default {
         },
         initHealth(userInfo) {
             this.uploadData = {
-                commonlyDrug: userInfo.commonlyDrug, // 常用药
-                allergen: userInfo.allergen, // 过敏源
-                dislikeFood: userInfo.dislikeFood, // 不能吃
-                enjoin: userInfo.enjoin, // 备注
+                useDrug: userInfo.useDrug, // 常用药
+                allergySource: userInfo.allergySource, // 过敏源
+                cannotEat: userInfo.cannotEat, // 不能吃
+                otherMatter: userInfo.otherMatter, // 备注
             };
         },
 
@@ -148,16 +145,21 @@ export default {
             });
             let { uploadData } = this;
             this.$api
-                .editHealthInfo({
+                .updateHealth({
                     ...uploadData,
                 })
                 .then((res) => {
-                    uni.hideLoading();
-                    this.$toast({
+                    uni.showToast({
                         title: "保存成功",
                         icon: "success",
                     });
-                });
+					setTimeout((e) => {
+                        uni.navigateBack();
+                    }, 500);
+                })
+				.finally(() => {
+					uni.hideLoading();
+				})
         },
     },
 };
