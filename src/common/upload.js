@@ -16,6 +16,8 @@ export default function upload(file, cb) {
                     TmpSecretId: res.tmpSecretId,
                     TmpSecretKey: res.tmpSecretKey,
                     XCosSecurityToken: res.sessionToken,
+					ExpiredTime: res.expiredTime,
+					StartTime: res.startTime
                 });
             },
         });

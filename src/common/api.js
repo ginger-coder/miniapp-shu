@@ -96,4 +96,28 @@ export default {
 			hideLoading: false,
 		})
 	},
+	saveBasic(data) {
+		return request({
+			url: '/student/saveBasic',
+			method: 'POST',
+			data: data, 
+			hideLoading: false,
+		})
+	},
+	updateSchool(data) {
+		return request({
+			url: '/student/updateSchool',
+			method: 'POST',
+			data: data, 
+			hideLoading: false,
+		})
+	},
+	// 字典/dict/school
+	getDict(prop) {
+		return request({
+			url: '/dict/' + prop,
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
 };

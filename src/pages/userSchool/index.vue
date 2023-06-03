@@ -117,8 +117,17 @@
             @close="onGradeCancel"
             :actions="gradeList"
             @select="onGreadeConfirm"
-			:safeAreaInsetBottom="true"
-			cancelText="取消"
+            :safeAreaInsetBottom="true"
+            cancelText="取消"
+        ></u-action-sheet>
+        <!-- 学校 -->
+        <u-action-sheet
+            :show="schoolModel"
+            @close="onSchoolCancel"
+            :actions="schoolList"
+            @select="onSchoolConfirm"
+            :safeAreaInsetBottom="true"
+            cancelText="取消"
         ></u-action-sheet>
         <!-- 教材 POP -->
         <u-action-sheet
@@ -126,8 +135,8 @@
             :actions="bookList"
             @close="onBookCancel"
             @select="onBookConfirm"
-			:safeAreaInsetBottom="true"
-			cancelText="取消"
+            :safeAreaInsetBottom="true"
+            cancelText="取消"
         ></u-action-sheet>
         <!-- 校内数学成绩 POP -->
         <u-action-sheet
@@ -135,8 +144,8 @@
             @close="onNumberCancel"
             :actions="numberList"
             @select="onNumberConfirm"
-			:safeAreaInsetBottom="true"
-			cancelText="取消"
+            :safeAreaInsetBottom="true"
+            cancelText="取消"
         ></u-action-sheet>
         <!-- 校内语文成绩 POP -->
         <u-action-sheet
@@ -144,56 +153,26 @@
             @close="onChineseCancel"
             :actions="chineseList"
             @select="onChineseConfirm"
-			:safeAreaInsetBottom="true"
-			cancelText="取消"
+            :safeAreaInsetBottom="true"
+            cancelText="取消"
         ></u-action-sheet>
         <u-keyboard
             mode="number"
             @change="onClassNumer"
             @backspace="onClassBackspace"
-            :mask="false"
-            v-model="numberKeyBoardShow"
-			safeAreaInsetBottom
+            :show="numberKeyBoardShow"
+			@confirm="confirmNumber"
+			@cancel="cancelNumber"
+            safeAreaInsetBottom
         ></u-keyboard>
     </view>
 </template>
 
 <script>
 import _ from "lodash";
-import { gradeList } from "@/common/constant.js";
+import { gradeList, numberList, bookList } from "@/common/constant.js";
 import api from "@/common/api.js";
 let { editSchoolInfo } = api;
-
-const numberList = [
-    {
-        value: "95",
-        label: "95分以上",
-    },
-    {
-        value: "90",
-        label: "90-95分",
-    },
-    {
-        value: "85",
-        label: "85-90分",
-    },
-    {
-        value: "80",
-        label: "80-85分",
-    },
-    {
-        value: "70",
-        label: "70-80分",
-    },
-    {
-        value: "69",
-        label: "70分以下",
-    },
-    {
-        value: "-1",
-        label: "暂无成绩",
-    },
-];
 
 export default {
     computed: {},
@@ -209,52 +188,30 @@ export default {
             mathBookErr: false,
             isChange: false, // 是否有数据改变
 
-            numberList: numberList,
+            numberList,
             chineseList: numberList,
-            bookList: [
-                {
-                    value: "1",
-                    label: "人教版",
-                },
-                {
-                    value: "2",
-                    label: "北师版",
-                },
-                {
-                    value: "3",
-                    label: "苏教版",
-                },
-                {
-                    value: "4",
-                    label: "冀教版",
-                },
-                {
-                    value: "5",
-                    label: "其他版本",
-                },
-            ],
+            bookList,
             gradeList,
             selectChineseText: "",
             selectChinese: "",
-            selectChineseDefault: [0],
+            selectChineseDefault: "",
 
             selectNumberText: "",
             selectNumber: "",
-            selectNumberDefault: [0],
+            selectNumberDefault: "",
 
             selectBookText: "",
             selectBook: "",
-            selectBookDefault: [0],
+            selectBookDefault: "",
 
             selectBookDisabled: false,
             selectGradeText: "",
             selectGrade: "",
-            selectGradeDefault: [0],
+            selectGradeDefault: "",
 
             selectGradeDisabled: false,
             selectAddressText: "",
-            selectAddress: [],
-            uiSelectAddress: [],
+            selectAddress: "",
             addressJSON: [],
             renderAddList: [],
             selectClassNumberText: "",
@@ -267,8 +224,19 @@ export default {
             wh: 500,
             btnType: "next", //'prev'
             timer: null,
+
+            schoolList: [],
+            schoolModel: false,
         };
     },
+    // <u-action-sheet
+    //         :show="schoolModel"
+    //         @close="onSchoolCancel"
+    //         :actions="schoolList"
+    //         @select="onSchoolConfirm"
+    //         :safeAreaInsetBottom="true"
+    //         cancelText="取消"
+    //     ></u-action-sheet>
     watch: {
         selectAddress(val) {
             if (val) {
@@ -276,28 +244,24 @@ export default {
             }
         },
     },
-    onShow() {
-        uni.$on("uSelectSchool", (data) => {
-            this.selectAddressText =
-                data.length > 3 ? data[data.length - 1].schoolName : "";
-            this.selectAddress = _.cloneDeep(data);
-        });
-    },
     created() {},
     onLoad() {
         // let userInfo = uni.getStorageSync("userInfo");
         // userInfo = JSON.parse(userInfo);
         // this.initSchoolData(userInfo);
+        this.initSchoolList();
     },
     methods: {
         openClassNumber() {
             this.numberKeyBoardShow = true;
         },
+        confirmNumber() {
+            this.numberKeyBoardShow = false;
+        },
+        cancelNumber(e) {
+            this.numberKeyBoardShow = false;
+        },
         onClassNumer(value) {
-            console.log(
-                "this.selectClassNumberText",
-                this.selectClassNumberText
-            );
             this.selectClassNumberText = `${
                 this.selectClassNumberText.split("班")[0]
             }${value}班`;
@@ -319,20 +283,29 @@ export default {
             this.isChange = true;
         },
         chooseSchool() {
-            this.$u.route({
-                url: "/components/101mini-select-address/101mini-select-address",
-            });
             this.isChange = true;
+            this.schoolModel = true;
+        },
+        onSchoolCancel() {
+            this.schoolModel = false;
+        },
+        onSchoolConfirm(e) {
+            this.selectAddressText = e.name;
+            this.selectAddress = e.value;
+            this.gradeErr = false;
+        },
+        initSchoolList() {
+            this.$getDict("school").then((res) => {
+                this.schoolList = res.map((el) => {
+                    return {
+                        value: el.dictCode,
+                        name: el.dictLabel,
+                    };
+                });
+            });
         },
         backEdit() {
-            if (
-                // this.selectAddress.length > 1 ||
-                // this.selectGrade != '' ||
-                // this.selectChinese != '' ||
-                // this.selectNumber != '' ||
-                // this.selectBook != ''
-                this.isChange
-            ) {
+            if (this.isChange) {
                 uni.showModal({
                     title: "确定离开?",
                     content: "已修改的信息将不会保存",
@@ -359,25 +332,6 @@ export default {
             this.classErr = false;
         },
         initSchoolData(userInfo) {
-            if (userInfo.provinceId) {
-                this.selectAddressText = userInfo.school;
-                this.selectAddress.push({
-                    code: userInfo.provinceId,
-                    name: userInfo.provinceName,
-                });
-            }
-            if (userInfo.cityId) {
-                this.selectAddress.push({
-                    code: userInfo.cityId,
-                    name: userInfo.cityName,
-                });
-            }
-            if (userInfo.countyId) {
-                this.selectAddress.push({
-                    code: userInfo.countyId,
-                    name: userInfo.countyName,
-                });
-            }
             if (userInfo.schoolId) {
                 this.selectAddress.push({
                     schoolId: userInfo.schoolId,
@@ -445,14 +399,14 @@ export default {
         },
 
         onSaveSchoolInfo() {
-            wx.showLoading({
+            uni.showLoading({
                 title: "保存中...",
             });
             let { selectAddressText, selectAddress } = this;
-            if (!selectAddress.length) {
-                wx.hideLoading();
+            if (!selectAddress) {
+                uni.hideLoading();
                 this.addressErr = true;
-                wx.showToast({
+                uni.showToast({
                     title: "请选择宝贝学校",
                     icon: "none",
                 });
@@ -461,8 +415,8 @@ export default {
 
             if (!this.selectGrade) {
                 this.gradeErr = true;
-                wx.hideLoading();
-                wx.showToast({
+                uni.hideLoading();
+                uni.showToast({
                     title: "请选择今年秋季宝贝的年级",
                     icon: "none",
                 });
@@ -470,8 +424,8 @@ export default {
             }
             if (!this.selectClassNumberText) {
                 this.classErr = true;
-                wx.hideLoading();
-                wx.showToast({
+                uni.hideLoading();
+                uni.showToast({
                     title: "请选择宝贝的班级",
                     icon: "none",
                 });
@@ -479,8 +433,8 @@ export default {
             }
             if (!this.selectBook) {
                 this.mathBookErr = true;
-                wx.hideLoading();
-                wx.showToast({
+                uni.hideLoading();
+                uni.showToast({
                     title: "请选择数学教材版本",
                     icon: "none",
                 });
@@ -489,8 +443,8 @@ export default {
 
             if (!this.selectNumber) {
                 this.mathScoreErr = true;
-                wx.hideLoading();
-                wx.showToast({
+                uni.hideLoading();
+                uni.showToast({
                     title: "请选择数学成绩",
                     icon: "none",
                 });
@@ -499,53 +453,37 @@ export default {
 
             if (!this.selectChinese) {
                 this.chineseScoreErr = true;
-                wx.hideLoading();
-                wx.showToast({
+                uni.hideLoading();
+                uni.showToast({
                     title: "请选择语文成绩",
                     icon: "none",
                 });
                 return;
             }
-            let provinceId = Number(selectAddress[0].code);
-            let provinceName = selectAddress[0].name;
-            let cityId = Number(selectAddress[1].code);
-            let cityName = selectAddress[1].name;
-            let areaId = Number(selectAddress[2].code);
-            let areaName = selectAddress[2].name;
-            let schoolName = selectAddress[3].schoolName;
-            let schoolId = String(selectAddress[3].schoolId);
+            const schoolId = Number(this.selectAddress);
             let grade = Number(this.selectGrade);
             let chineseScore = Number(this.selectChinese);
             let mathScore = Number(this.selectNumber);
-            let mathBook = Number(this.selectBook);
-            let className = this.selectClassNumberText.split("班")[0];
-            editSchoolInfo({
-                schoolName,
+            let textBook = Number(this.selectBook);
+            let schoolGradeId = this.selectClassNumberText.split("班")[0];
+            this.$api.updateSchool({
                 schoolId,
-                provinceId,
-                provinceName,
-                cityId,
-                cityName,
-                areaId,
-                areaName,
                 grade,
-                mathBook,
+                textBook,
                 mathScore,
                 chineseScore,
-                className,
+                schoolGradeId,
             })
                 .then((res) => {
                     this.cleanErr();
-                    wx.hideLoading();
-                    wx.showToast({
+                    uni.hideLoading();
+                    uni.showToast({
                         title: "保存成功",
                         icon: "success",
                     });
 
                     this.timer = setTimeout((e) => {
-                        uni.navigateTo({
-                            url: "/pages/userHealth/index",
-                        });
+                        uni.navigateBack();
                     }, 500);
                 })
                 .catch((e) => {
@@ -555,23 +493,11 @@ export default {
         openNumber() {
             this.numberModel = true;
             this.isChange = true;
-            // if(this.selectNumber){
-            // 	this.selectNumberDefault = [this.numberList.findIndex(el=>{
-            // 		return el.value == this.selectNumber;
-            // 	})]
-            // }
-            // this.selectNumberDefault = [0];
-            // console.log('this.selectNumberDefault',this.selectNumberDefault)
         },
         onNumberConfirm(e) {
-            if (e.length > 0) {
-                this.selectNumberText = e[0].label;
-                this.selectNumber = e[0].value;
-                // this.selectNumberDefault = [this.numberList.findIndex(el=>{
-                // 	return el.value == this.selectNumber;
-                // })] || [0];
-                this.mathScoreErr = false;
-            }
+			this.selectNumberText = e.name;
+			this.selectNumber = e.value;
+			this.mathScoreErr = false;
         },
         onNumberCancel(e) {
             this.numberModel = false;
@@ -597,11 +523,9 @@ export default {
             // }
         },
         onChineseConfirm(e) {
-            if (e.length > 0) {
-                this.selectChineseText = e[0].label;
-                this.selectChinese = e[0].value;
-                this.chineseScoreErr = false;
-            }
+            this.selectChineseText = e.name;
+            this.selectChinese = e.value;
+            this.chineseScoreErr = false;
         },
         openBook() {
             if (this.selectBookDisabled) {
@@ -611,11 +535,9 @@ export default {
             this.isChange = true;
         },
         onBookConfirm(e) {
-            if (e.length > 0) {
-                this.selectBookText = e[0].label;
-                this.selectBook = e[0].value;
-                this.mathBookErr = false;
-            }
+            this.selectBookText = e.name;
+            this.selectBook = e.value;
+            this.mathBookErr = false;
         },
         openGrade() {
             if (this.selectGradeDisabled) {
@@ -625,11 +547,9 @@ export default {
             this.isChange = true;
         },
         onGreadeConfirm(e) {
-            if (e.length > 0) {
-                this.selectGradeText = e[0].label;
-                this.selectGrade = e[0].value;
-                this.gradeErr = false;
-            }
+            this.selectGradeText = e.name;
+            this.selectGrade = e.value;
+            this.gradeErr = false;
         },
     },
     onUnload() {
@@ -678,8 +598,8 @@ export default {
     box-sizing: border-box;
     position: relative;
     padding-bottom: 180rpx;
-	height: 100vh;
-	box-sizing: border-box;
+    height: 100vh;
+    box-sizing: border-box;
 
     .user-container-msg-save {
         height: 178rpx;

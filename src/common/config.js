@@ -1,6 +1,6 @@
 const hostParams = {
 	development: 'http://152.136.126.96:8010', //新版 开发
-    production  : 'http://152.136.126.96:8010', //线上
+    production  : 'http://shutuo.mingyou18.com', //线上
 }
 /**
  * wrongHost 需要更在gray环境访问test域名

@@ -14,6 +14,7 @@ Vue.component('tab-bar', tabBar);
 Vue.component('shop-cart', shopCart);
 Vue.prototype.$api = api;
 Vue.prototype.$toast = uni.$u.toast;
+Vue.prototype.$getDict = api.getDict;
 uni.$u.setConfig({
 	// 修改$u.config对象的属性
 	config: {

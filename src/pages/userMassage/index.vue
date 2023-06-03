@@ -132,11 +132,11 @@ export default {
             return JSON.parse(userInfo);
         },
         init() {
-            let userInfo = this.getUserInfo();
-            if (userInfo) {
-                this.initUserInfo(userInfo);
-            }
-            this.isFirst = isFirst;
+            // let userInfo = this.getUserInfo();
+            // if (userInfo) {
+            //     this.initUserInfo(userInfo);
+            // }
+            // this.isFirst = isFirst;
         },
         initUserInfo(userInfo) {
             this.showPic = (() => {
@@ -172,32 +172,29 @@ export default {
 				this.$toast('请输入2-12位的字母或汉字');
                 return;
             }
-        //     editUserBaseInfo({
-        //         ...uploadData,
-        //     })
-        //         .then((res) => {
-        //             this.nameErr = false;
-        //             this.sexErr = false;
-        //             wx.hideLoading();
-        //             wx.showToast({
-        //                 title: "保存成功",
-        //                 icon: "success",
-        //                 duration: 2000,
-        //             });
-        //             setTimeout((e) => {
-        //                 if (!this.isFirst) {
-        //                     uni.navigateBack();
-        //                 } else {
-        //                     uni.navigateTo({
-        //                         url: "/pages/UserSchool/UserSchool",
-        //                     });
-        //                 }
-        //             }, 400);
-        //         })
-        //         .catch((e) => {
-        //             this.nameErr = false;
-        //             this.sexErr = false;
-        //         });
+
+            this.$api.saveBasic({
+                avatarUrl: uploadData.picUrl,
+				gender: Number(uploadData.sex),
+				nickName: uploadData.name,
+            })
+                .then((res) => {
+                    this.nameErr = false;
+                    this.sexErr = false;
+                    uni.hideLoading();
+                    uni.showToast({
+                        title: "保存成功",
+                        icon: "success",
+                    });
+
+                    setTimeout((e) => {
+                        uni.navigateBack();
+                    }, 500);
+                })
+                .catch((e) => {
+                    this.nameErr = false;
+                    this.sexErr = false;
+                });
         },
         chooseAvatar() {
             this.$refs.yhdslCropper.chooseImage();
