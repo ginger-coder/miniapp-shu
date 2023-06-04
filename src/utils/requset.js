@@ -1,10 +1,13 @@
 import { env, envConfig, wxAppId } from "@/common/config.js";
+import { login } from '@/utils/common';
+
 // vuex 的使用  详情参考官网 https://uniapp.dcloud.io/vue-vuex
 // import store from '../store/index.js'
 
 
 export default class Request {
     http(param) {
+		
         let token = uni.getStorageSync("token") || '';
         // 请求参数
         let url = param.url;
@@ -37,7 +40,6 @@ export default class Request {
                 title: "加载中...",
             });
         }
-
         // 返回promise
         return new Promise((resolve, reject) => {
             // 请求
@@ -50,7 +52,11 @@ export default class Request {
                     let response = res.data;
                     if (response.code == 200) {
                         resolve(response.data);
-                    } else {
+                    } else if(response.code == 401) {
+						// 重新获取wx_token
+						login('reload');
+					}
+					else {
 						uni.showToast({
 							icon: 'none',
 							title: response?.msg || '请求失败'
