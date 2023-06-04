@@ -7,12 +7,12 @@ export default {
                 iconPath: "/static/tabbar/icon-index.png",
                 selectedIconPath: "/static/tabbar/icon-index-active.png",
             },
-            {
-                text: "学情",
-                pagePath: "/pages/study/index",
-                iconPath: "/static/tabbar/icon-study.png",
-                selectedIconPath: "/static/tabbar/icon-study-active.png",
-            },
+            // {
+            //     text: "学情",
+            //     pagePath: "/pages/study/index",
+            //     iconPath: "/static/tabbar/icon-study.png",
+            //     selectedIconPath: "/static/tabbar/icon-study-active.png",
+            // },
             {
                 text: "图书",
                 pagePath: "/pages/book/index",

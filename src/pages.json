@@ -94,10 +94,6 @@
                 "pagePath": "pages/index/index"
             },
             {
-                "text": "学情",
-                "pagePath": "pages/study/index"
-            },
-            {
                 "text": "图书",
                 "pagePath": "pages/book/index"
             },

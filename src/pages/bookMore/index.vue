@@ -1,6 +1,6 @@
 <template>
     <view class="index-container">
-        <u-sticky bgColor="#FAFAFA">
+        <!-- <u-sticky bgColor="#FAFAFA">
             <view class="header">
                 <u-search
                     placeholder="搜索"
@@ -8,7 +8,7 @@
                     @search="onSearch"
                 ></u-search>
             </view>
-        </u-sticky>
+        </u-sticky> -->
         <u-gap></u-gap>
         <view class="layout">
             <template v-if="bookList.length">

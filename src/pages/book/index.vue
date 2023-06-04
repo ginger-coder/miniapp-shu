@@ -2,13 +2,13 @@
     <view class="index-container">
         <u-sticky bgColor="#FAFAFA">
             <view class="header">
-                <u-search
+                <!-- <u-search
                     placeholder="搜索"
                     v-model="keyword"
                     @search="onSearch"
                     :showAction="false"
 					:current="activeGrade"
-                ></u-search>
+                ></u-search> -->
                 <u-tabs
                     :list="levelList"
                     lineWidth="50"
