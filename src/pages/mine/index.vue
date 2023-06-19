@@ -3,7 +3,7 @@
         <div class="banner">
             <div class="banner-user">
                 <div class="banner-user-cn">
-					<u-avatar size="100%" :src="headImg"></u-avatar>
+                    <u-avatar size="100%" :src="headImg"></u-avatar>
                 </div>
                 <view class="banner-user-msg">
                     <p class="banner-user-name">
@@ -33,9 +33,7 @@
                         >
                             <div
                                 class="list-top-box-item-box"
-                                @click="
-                                    onNavigateTo('/pages/userSchool/index')
-                                "
+                                @click="onNavigateTo('/pages/userSchool/index')"
                             >
                                 <view
                                     class="list-top-box-item-box-tip"
@@ -59,11 +57,7 @@
                         >
                             <div
                                 class="list-top-box-item-box"
-                                @click="
-                                    onNavigateTo(
-                                        '/pages/userHealth/index'
-                                    )
-                                "
+                                @click="onNavigateTo('/pages/userHealth/index')"
                             >
                                 <image
                                     class="list-top-box-item-box-icon"
@@ -84,24 +78,35 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 const defaultImg =
     "https://tal-101-static.oss-cn-beijing.aliyuncs.com/wxapp/parent/mine/icon-default.png";
 export default {
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.userInfo.info,
+        }),
+    },
     data() {
         return {
             headImg: defaultImg,
-			userInfo: {
-				name: '用户名',
-				grade: 1
-			}
+            userInfo: {
+                name: "用户名",
+                grade: 1,
+            },
         };
     },
-    onLoad() {
+    async onLoad() {
         this.headImg = defaultImg;
+		let userInfo = await this.getUserInfo();
+		console.log('userInfo', userInfo);
     },
-    async onShow() {},
+    async onShow() {
+		
+	},
     onHide() {},
     methods: {
+		...mapActions(['getUserInfo']),
         onNavigateTo(url) {
             uni.navigateTo({
                 url,
@@ -127,7 +132,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-	min-height: 100vh;
+    min-height: 100vh;
     background: #ffffff;
 
     .list {
@@ -140,8 +145,8 @@ export default {
 
         &-top {
             height: 244rpx;
-            background-color: #00BBDE;
-			border-radius: 20rpx;
+            background-color: #00bbde;
+            border-radius: 20rpx;
 
             &-box {
                 height: 100%;
@@ -252,9 +257,9 @@ export default {
             flex-direction: column;
             align-items: center;
             padding-top: 150rpx;
-			background: url("@/static/mine/icon-mine-bg.png");
-			background-size: 105% auto;
-			background-repeat: no-repeat;
+            background: url("@/static/mine/icon-mine-bg.png");
+            background-size: 105% auto;
+            background-repeat: no-repeat;
 
             &-cn {
                 width: 160rpx;

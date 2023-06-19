@@ -4,7 +4,7 @@ import { login } from '@/utils/common';
 // vuex 的使用  详情参考官网 https://uniapp.dcloud.io/vue-vuex
 // import store from '../store/index.js'
 
-
+const timer = null;
 export default class Request {
     http(param) {
 		
@@ -54,7 +54,10 @@ export default class Request {
                         resolve(response.data);
                     } else if(response.code == 401) {
 						// 重新获取wx_token
-						login('reload');
+						clearTimeout(timer);
+						timer = setTimeout(() => {
+							login('reload');
+						}, 3000);
 					}
 					else {
 						uni.showToast({

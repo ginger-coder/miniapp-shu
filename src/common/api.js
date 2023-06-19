@@ -128,4 +128,12 @@ export default {
 			hideLoading: false,
 		})
 	},
+	// 获取用户信息
+	getUserInfo(prop) {
+		return request({
+			url: '/student/getUserInfo',
+			method: 'GET',
+			hideLoading: false,
+		})
+	},
 };

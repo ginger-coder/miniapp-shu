@@ -1,6 +1,6 @@
 import api from '@/common/api.js';
 import * as mutation from '../mutations.js';
-import cloneDeep from 'lodash.clonedeep';
+import _ from 'lodash';
 
 
 export default {
@@ -50,13 +50,11 @@ export default {
 	},
 	mutations: {
 		[mutation.GET_USER_INFO](state, payload) {
-			state.info = cloneDeep(payload);
+			state.info = _.cloneDeep(payload);
 			if(payload){
 				uni.setStorageSync('userInfo', JSON.stringify(payload));
-				uni.setStorageSync('isPay',payload.isPay);
 			}else{
 				uni.setStorageSync('userInfo', null);
-				uni.setStorageSync('isPay',false);
 			}
 			
 		}
