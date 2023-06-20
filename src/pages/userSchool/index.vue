@@ -335,7 +335,7 @@ export default {
             if (userInfo.schoolId) {
                 this.selectAddress.push({
                     schoolId: userInfo.schoolId,
-                    schoolName: userInfo.school,
+                    schoolName: userInfo.schoolName,
                 });
             }
             try {
@@ -343,21 +343,6 @@ export default {
                     (el) => el.value == userInfo.chineseScore
                 ).label;
                 this.selectChinese = Number(userInfo.chineseScore);
-                if (this.selectChinese) {
-                    this.selectChineseDefault = [
-                        this.numberList.findIndex((el) => {
-                            return el.value == this.selectChinese;
-                        }),
-                    ];
-                } else {
-                    this.selectChineseDefault = [0];
-                }
-
-                const selectNumberText = numberList.find(
-                    (el) => el.value == userInfo.mathScore
-                );
-                this.selectNumberText =
-                    selectNumberText && selectNumberText.label;
                 this.selectNumber = Number(userInfo.mathScore);
                 if (this.selectNumber) {
                     this.selectNumberDefault = [
@@ -370,22 +355,13 @@ export default {
                 }
 
                 if (userInfo.mathBook > 0 && userInfo.mathBook <= 5) {
-                    const selectBookText = this.bookList.find(
-                        (el) => el.value == userInfo.mathBook
-                    );
-                    this.selectBookText =
-                        selectBookText && selectBookText.label;
                     this.selectBook = Number(userInfo.mathBook);
                     this.selectBookDisabled = true;
                 }
 
-                if (userInfo.grade) {
-                    const selectGradeText = this.gradeList.find(
-                        (el) => el.value == userInfo.grade
-                    );
-                    this.selectGradeText =
-                        selectGradeText && selectGradeText.label;
-                    this.selectGrade = Number(userInfo.grade);
+                if (userInfo.schoolGradeId) {
+                    this.selectGradeText = userInfo.schoolGradeName;
+                    this.selectGrade = Number(userInfo.schoolGradeId);
                     this.selectGradeDisabled = true;
                 }
 
