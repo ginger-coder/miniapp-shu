@@ -7,10 +7,10 @@
                 </div>
                 <view class="banner-user-msg">
                     <p class="banner-user-name">
-                        {{ userInfo.name }}
+                        {{ userInfo.nickName }}
                     </p>
                     <p class="banner-user-level">
-                        {{ userInfo.grade | fotmatGrade }}
+                        {{ userInfo.schoolGradeName }}
                     </p>
                 </view>
             </div>
@@ -90,16 +90,12 @@ export default {
     data() {
         return {
             headImg: defaultImg,
-            userInfo: {
-                name: "用户名",
-                grade: 1,
-            },
         };
     },
     async onLoad() {
-        this.headImg = defaultImg;
-		let userInfo = await this.getUserInfo();
-		console.log('userInfo', userInfo);
+        let userInfo = await this.getUserInfo();
+        console.log('userInfo', userInfo);
+        this.headImg = userInfo.avatarurl;
     },
     async onShow() {
 		
@@ -114,18 +110,7 @@ export default {
         },
     },
     filters: {
-        fotmatGrade(level) {
-            let data = {
-                1: "一年级",
-                2: "二年级",
-                3: "三年级",
-                4: "四年级",
-                5: "五年级",
-                6: "六年级",
-                17: "大班",
-            };
-            return data[Number(level)];
-        },
+        
     },
 };
 </script>

@@ -109,7 +109,6 @@ export default {
                 pic: "",
                 name: "",
             },
-            isFirst: true,
             isChange: false, // 是否有数据改变
 
             nameErr: false,
@@ -132,11 +131,10 @@ export default {
             return JSON.parse(userInfo);
         },
         init() {
-            // let userInfo = this.getUserInfo();
-            // if (userInfo) {
-            //     this.initUserInfo(userInfo);
-            // }
-            // this.isFirst = isFirst;
+            let userInfo = this.getUserInfo();
+            if (userInfo) {
+                this.initUserInfo(userInfo);
+            }
         },
         initUserInfo(userInfo) {
             this.showPic = (() => {
