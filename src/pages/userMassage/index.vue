@@ -153,7 +153,7 @@ export default {
                 title: "保存中...",
             });
             let { uploadData } = this;
-            if (uploadData.gender != 0 && uploadData.age != 1) {
+            if (uploadData.gender != 0 && uploadData.gender != 1) {
                 uni.hideLoading();
                 this.sexErr = true;
                 this.$toast('请选择宝贝性别');
