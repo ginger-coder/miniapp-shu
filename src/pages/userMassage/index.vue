@@ -159,6 +159,7 @@ export default {
                 this.$toast('请选择宝贝性别');
                 return;
             }
+			console.log('uploadData.nickName', uploadData.nickName);
             if (!msg_reg.test(uploadData.nickName)) {
                 wx.hideLoading();
                 this.nameErr = true;
