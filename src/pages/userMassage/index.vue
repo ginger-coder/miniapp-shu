@@ -11,7 +11,7 @@
                         class="user-container-banner-photobox-pic"
                         @click="chooseAvatar"
                     >
-                        <image :src="showPic" mode="aspectFit"></image>
+                        <image :src="uploadData.avatarUrl" mode="aspectFit"></image>
                     </div>
                     <div class="user-container-banner-photobox-tip">
                         请上传宝贝头像
@@ -24,7 +24,7 @@
                         <li
                             class="user-container-msg-content-ganger-item"
                             :class="{
-                                active: uploadData.sex == 1,
+                                active: uploadData.gender == 1,
                                 error: sexErr,
                             }"
                             @click="onEditSex(1)"
@@ -39,7 +39,7 @@
                         <li
                             class="user-container-msg-content-ganger-item"
                             :class="{
-                                active: uploadData.sex == 2,
+                                active: uploadData.gender == 0,
                                 error: sexErr,
                             }"
                             @click="onEditSex(2)"
@@ -61,7 +61,7 @@
                             @focus="handleFocusInput"
                             maxlength="12"
                             type="text"
-                            v-model="uploadData.name"
+                            v-model="uploadData.nickName"
                             placeholder="请填写宝贝全名 (必填)"
                         />
                     </div>
@@ -105,9 +105,10 @@ export default {
             demoTipShow: false,
             showPic: "",
             uploadData: {
-                sex: "",
-                pic: "",
-                name: "",
+                age: '',
+                avatarUrl: '',
+                nickName: '',
+                gender: 1,
             },
             isChange: false, // 是否有数据改变
 
@@ -123,6 +124,7 @@ export default {
         uploadImg(imagePath) {
             upload(imagePath, (fileURL) => {
 				console.log('fileURL', fileURL);
+				this.uploadData.avatarUrl = fileURL.indexOf('http') > -1 ? fileURL : 'https://' + fileURL;
 			});
         },
 
@@ -137,20 +139,11 @@ export default {
             }
         },
         initUserInfo(userInfo) {
-            this.showPic = (() => {
-                if (
-                    userInfo.picUrl == "" ||
-                    userInfo.picUrl.indexOf("http") < 0
-                ) {
-                    return default_head;
-                }
-                return userInfo.picUrl;
-            })();
             this.uploadData = {
-                sex: userInfo.sex,
-                pic: userInfo.pic,
-                name: userInfo.name,
-                picUrl: userInfo.picUrl,
+                age: userInfo.age,
+                avatarUrl: userInfo.avatarUrl,
+                nickName: userInfo.nickName,
+                gender: userInfo.gender,
             };
         },
         saveUserInfo() {
@@ -158,13 +151,14 @@ export default {
                 title: "保存中...",
             });
             let { uploadData } = this;
-            if (uploadData.sex != 1 && uploadData.sex != 2) {
+            if (uploadData.gender != 0 && uploadData.gender != 1) {
                 uni.hideLoading();
                 this.sexErr = true;
                 this.$toast('请选择宝贝性别');
                 return;
             }
-            if (!msg_reg.test(uploadData.name)) {
+			console.log('uploadData.nickName', uploadData.nickName);
+            if (!msg_reg.test(uploadData.nickName)) {
                 wx.hideLoading();
                 this.nameErr = true;
 				this.$toast('请输入2-12位的字母或汉字');
@@ -172,9 +166,10 @@ export default {
             }
 
             this.$api.saveBasic({
-                avatarUrl: uploadData.picUrl,
-				gender: Number(uploadData.sex),
-				nickName: uploadData.name,
+                avatarUrl: uploadData.avatarUrl,
+				gender: Number(uploadData.gender),
+				nickName: uploadData.nickName,
+				age: uploadData.age
             })
                 .then((res) => {
                     this.nameErr = false;
@@ -200,7 +195,7 @@ export default {
         onEditSex(val) {
             this.sexErr = false;
             this.isChange = true;
-            this.uploadData.sex = String(val);
+            this.uploadData.gender = String(val);
         },
         open() {
             this.demoTipShow = true;
