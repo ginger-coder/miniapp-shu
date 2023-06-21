@@ -93,12 +93,12 @@ export default {
         };
     },
     async onLoad() {
-        let userInfo = await this.getUserInfo();
-        console.log('userInfo', userInfo);
-        this.headImg = userInfo.avatarurl;
+        
     },
     async onShow() {
-		
+		let userInfo = await this.getUserInfo();
+        console.log('userInfo', userInfo);
+        this.headImg = userInfo.avatarurl;
 	},
     onHide() {},
     methods: {

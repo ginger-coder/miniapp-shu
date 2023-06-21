@@ -9,7 +9,7 @@ export default function upload(file, cb) {
     // let fileUrl = ''
     api.getTmpSecret().then(res => {
         // 后台接口返回 密钥相关信息
-        let uploadFileName = Date.parse(new Date()) + '.png';
+        var Key = Date.now() + '_' + file.substr(file.lastIndexOf('/') + 1);
         var cos = new COS({
             getAuthorization: function (options, callback) {
                 callback({
@@ -26,7 +26,7 @@ export default function upload(file, cb) {
                 // 此处用了最简单的上传函数，此外，腾讯云还支持分片上传函数等等。
                 Bucket: config.Bucket, // 存储桶名称
                 Region: config.Region, // 地区
-                Key: uploadFileName, // 图片名称
+                Key: 'images/' + Key,// 图片名称
 				FilePath: file,
                 onHashProgress: function (progressData) {
                     console.log("校验中", JSON.stringify(progressData));

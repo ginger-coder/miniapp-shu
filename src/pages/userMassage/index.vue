@@ -132,7 +132,7 @@ export default {
 				this.uploadData.avatarUrl =
 					fileURL.indexOf('http') > -1
 						? fileURL
-						: 'https://' + fileURL;
+						: 'http://' + fileURL;
 			});
 		},
 
