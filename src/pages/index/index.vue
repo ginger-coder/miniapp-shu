@@ -128,9 +128,17 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            bannerList: [],
+        };
     },
-    onLoad() {},
+    onLoad() {
+        
+    },
+    async onShow() {
+        const banners = await this.$getDict('getBanners');
+        console.log('banners', banners);
+    },
     methods: {},
 };
 </script>

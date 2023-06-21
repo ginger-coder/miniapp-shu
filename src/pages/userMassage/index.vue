@@ -45,7 +45,7 @@
 								active: uploadData.gender == 0,
 								error: sexErr,
 							}"
-							@click="onEditSex(2)"
+							@click="onEditSex(0)"
 						>
 							<image
 								class="user-container-msg-content-ganger-item-icon"

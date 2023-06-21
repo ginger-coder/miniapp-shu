@@ -335,7 +335,7 @@ export default {
 			let userInfo = uni.getStorageSync('userInfo');
 			userInfo = JSON.parse(userInfo);
 			if (userInfo.schoolId) {
-				this.selectAddres = userInfo.schoolId;
+				this.selectAddress = userInfo.schoolId;
 				this.selectAddressText = userInfo.schoolName;
 			}
 			try {
@@ -402,15 +402,15 @@ export default {
 				});
 				return;
 			}
-			if (!this.selectClassNumberText) {
-				this.classErr = true;
-				uni.hideLoading();
-				uni.showToast({
-					title: '请选择宝贝的班级',
-					icon: 'none',
-				});
-				return;
-			}
+			// if (!this.selectClassNumberText) {
+			// 	this.classErr = true;
+			// 	uni.hideLoading();
+			// 	uni.showToast({
+			// 		title: '请选择宝贝的班级',
+			// 		icon: 'none',
+			// 	});
+			// 	return;
+			// }
 			if (!this.selectBook) {
 				this.mathBookErr = true;
 				uni.hideLoading();
