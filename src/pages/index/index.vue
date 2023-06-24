@@ -10,115 +10,29 @@
                 src="../../static/index/icon-index-banner1.png"
                 mode="widthFix"
             ></image>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
+            <template v-if="shopList.length">
+                <view
+                    
+                    class="book-item"
+                    v-for="(item, index) in shopList"
+                    :key="item.id"
+                >
+                    <view class="book-image">
+                        <image
+                            :src="item.url | formatBaseURL"
+                            mode="aspectFit"
+                            @error="onImageError($event, index)"
+                        ></image>
+                    </view>
+                    <view class="book-title">
+                        <view class="title">{{ item.title }}</view>
+                        <!-- <view class="price"> ￥800/周 </view> -->
+                    </view>
+                    <!-- <view class="book-desc"> 这是描述文案 </view> -->
                 </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
-            </view>
-            <view class="book-item">
-                <view class="book-image">
-                    <image src="../../static/1.png" mode="widthFix"></image>
-                </view>
-                <view class="book-title">
-                    <view class="title"> 这是标题 </view>
-                    <view class="price"> ￥800/周 </view>
-                </view>
-                <view class="book-desc"> 这是描述文案 </view>
+            </template>
+			<view class="empty" v-else>
+                <u-empty mode="data"> </u-empty>
             </view>
         </view>
         <tab-bar />
@@ -126,28 +40,49 @@
 </template>
 
 <script>
+import { env, envConfig, wxAppId } from "@/common/config.js";
+
 export default {
     data() {
         return {
             bannerList: [],
+            shopList: [],
         };
     },
-    onLoad() {
-        
-    },
-    async onShow() {
-        this.initList();
-    },
-    methods: {
-		async initList() {
-			const bannerList = await this.$getDict('bannerList')
-			console.log('bannerList', bannerList);
+	filters: {
+		formatBaseURL: function(path){
+			return path.indexOf('http') == -1 ? envConfig[env].baseURL + '' + path : path;
 		}
 	},
+    onLoad() {},
+    async onShow() {
+        this.init();
+    },
+    methods: {
+        init() {
+            // this.initBanner();
+            this.initList();
+        },
+        async initBanner() {
+            this.bannerList = await this.$getDict("bannerList");
+        },
+        async initList() {
+            this.shopList = await this.$getDict("getBanners");
+        },
+        onImageError(e, index) {
+			if(e.detail.errMsg) {
+				this.shopList[index].url = "https://cdn.uviewui.com/uview/empty/data.png";
+			}
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
+.empty {
+	height: 100%;
+	padding-top: 200rpx;
+}
 .index-container {
     min-height: 100vh;
     display: flex;
@@ -189,7 +124,7 @@ export default {
         border-radius: 15rpx;
         padding: 20rpx;
         box-sizing: border-box;
-		margin-bottom: 30rpx;
+        margin-bottom: 30rpx;
         .book-image {
             width: 100%;
             height: 300rpx;
@@ -197,6 +132,7 @@ export default {
             margin-bottom: 10rpx;
             image {
                 width: 100%;
+                height: 100%;
             }
         }
         .book-title {
@@ -206,7 +142,7 @@ export default {
             .title {
                 font-size: 30rpx;
                 font-weight: 400;
-                color: $themeColor;
+                // color: $themeColor;
             }
             .price {
                 font-size: 28rpx;
