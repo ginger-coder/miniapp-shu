@@ -136,10 +136,14 @@ export default {
         
     },
     async onShow() {
-        const banners = await this.$getDict('getBanners');
-        console.log('banners', banners);
+        this.initList();
     },
-    methods: {},
+    methods: {
+		async initList() {
+			const bannerList = await this.$getDict('bannerList')
+			console.log('bannerList', bannerList);
+		}
+	},
 };
 </script>
 
