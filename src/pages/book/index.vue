@@ -42,20 +42,22 @@
                     </u-cell>
                     <view
                         class="card"
-                        v-for="book in item.bookInfos"
+                        v-for="(book) in item.bookInfos"
                         :key="book.bookId"
                     >
                         <!-- 内容 -->
                         <view class="shop-left">
                             <image
-                                src="../../static/1.png"
-                                mode="widthFix"
+								class="shop-image"
+                                :src="book.cover | formatBaseURL"
+                                mode="aspectFit"
+                                @error="onImageError($event, book)"
                             ></image>
                         </view>
                         <view class="shop-right">
                             <view class="shop-title">{{ book.nickName }}</view>
                             <view class="shop-tag">
-                                <view class="tag">
+                                <view class="tag" v-if="book.borrowed">
                                     <u-tag
                                         text="已借过"
                                         shape="circle"
@@ -64,16 +66,20 @@
                                         borderColor="#EDF8D8"
                                     ></u-tag>
                                 </view>
-                                <view class="tag">
+                                <view
+                                    class="tag"
+                                    v-for="item in book.labels"
+                                    :key="item"
+                                >
                                     <u-tag
-                                        text="高人气"
+                                        :text="item"
                                         shape="circle"
                                         bgColor="#FFE8D0"
                                         color="#DE7A00"
                                         borderColor="#FFE8D0"
                                     ></u-tag>
                                 </view>
-                                <view class="tag">
+                                <!-- <view class="tag">
                                     <u-tag
                                         text="已借完"
                                         shape="circle"
@@ -81,7 +87,7 @@
                                         color="#848484"
                                         borderColor="#eee"
                                     ></u-tag>
-                                </view>
+                                </view> -->
                             </view>
                             <view class="shop-desc">
                                 {{ book.introduction }}
@@ -105,14 +111,20 @@
                 <u-empty mode="data"> </u-empty>
             </view>
         </view>
-		<shop-cart :value="count" />
+        <shop-cart :value="count" />
         <tab-bar />
     </view>
 </template>
 
 <script>
 import _ from "lodash";
+import { env, envConfig } from "@/common/config.js";
 export default {
+	filters: {
+		formatBaseURL: function(path){
+			return path?.indexOf('http') == -1 ? envConfig[env].baseURL + '' + path : path;
+		}
+	},
     data() {
         return {
             indicator: false,
@@ -138,6 +150,11 @@ export default {
     },
     mounted() {},
     methods: {
+		onImageError(e, book) {
+			if(e.detail.errMsg) {
+				book.cover = "https://cdn.uviewui.com/uview/empty/data.png";
+			}
+        },
         async initPage() {
             const initGrade = await this.onGetAllLabel();
             this.activeGrade = initGrade.id;
@@ -160,8 +177,15 @@ export default {
             return this.$api
                 .getGradeBooksByGradeId(this.activeGrade)
                 .then((res) => {
-                    console.log("res", res);
-                    this.booksList = _.cloneDeep(res);
+                    this.booksList = _.cloneDeep(res).map((el) => {
+                        el.bookInfos = el.bookInfos.map((e) => {
+                            e.labels = e.recommendLabels
+                                ? el.recommendLabels.split(",")
+                                : [];
+                            return e;
+                        });
+                        return el;
+                    });
                 });
         },
         onSelectLevel(item) {
@@ -170,7 +194,11 @@ export default {
         },
         onInfo(classLabelId) {
             uni.navigateTo({
-                url: "/pages/bookMore/index?classLabelId=" + classLabelId + "&gradeId=" + this.activeGrade,
+                url:
+                    "/pages/bookMore/index?classLabelId=" +
+                    classLabelId +
+                    "&gradeId=" +
+                    this.activeGrade,
             });
         },
         onSearch(value) {
@@ -178,7 +206,7 @@ export default {
         },
         async handleClick(book) {
             await this.$api.joinBookRack(book.bookId);
-			this.$toast('加入成功');
+            this.$toast("加入成功");
         },
     },
 };
@@ -186,8 +214,8 @@ export default {
 
 <style lang="scss" scoped>
 .empty {
-	height: 100%;
-	padding-top: 300rpx;
+    height: 100%;
+    padding-top: 300rpx;
 }
 .header {
     padding: 30rpx 30rpx 0;
@@ -210,13 +238,13 @@ export default {
     box-sizing: border-box;
 }
 .index-container {
-	display: flex;
+    display: flex;
     min-height: 100vh;
     flex-direction: column;
 }
 .layout {
     padding: 0 30rpx 30rpx;
-	flex: 1;
+    flex: 1;
     .card-box {
         background: #fff;
         border-radius: 20rpx;
@@ -229,8 +257,9 @@ export default {
             display: flex;
             .shop-left {
                 width: 100px;
-                image {
+                .shop-image {
                     width: 100%;
+					height: 100%;
                 }
             }
             .shop-right {

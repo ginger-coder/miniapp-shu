@@ -100,7 +100,7 @@ export default {
     text-align: center;
     font-weight: 600;
     box-sizing: border-box;
-    padding-top: 80rpx;
+    padding-top: 100rpx;
 }
 .book-list-container {
     flex: 1;

@@ -26,10 +26,12 @@
                                         :value="item.bookId"
                                         :checked="item.checked"
                                     />
-                                    <view class="shop-image">
+                                    <view class="shop-left">
                                         <image
-                                            src="../../static/1.png"
-                                            mode="widthFix"
+                                            class="shop-image"
+                                            :src="item.cover | formatBaseURL"
+                                            mode="aspectFit"
+                                            @error="onImageError($event, item)"
                                         ></image>
                                     </view>
                                     <view class="shop-content">
@@ -54,7 +56,9 @@
             <view class="content">
                 <div class="footer-left">
                     <checkbox-group @change="onSelectAll">
-                        <checkbox class="all-select" :checked="allChecked"> 全选 </checkbox>
+                        <checkbox class="all-select" :checked="allChecked">
+                            全选
+                        </checkbox>
                     </checkbox-group>
                     <view class="desc"> 已选：{{ sum }}本，每次限5本 </view>
                 </div>
@@ -76,6 +80,13 @@
 <script>
 import _ from "lodash";
 export default {
+	filters: {
+        formatBaseURL: function (path) {
+            return path?.indexOf("http") == -1
+                ? envConfig[env].baseURL + "" + path
+                : path;
+        },
+    },
     data() {
         return {
             bookList: [],
@@ -89,7 +100,7 @@ export default {
             ],
             alway: 0,
             selectBookList: [],
-			allChecked: true,
+            allChecked: true,
         };
     },
     computed: {
@@ -105,6 +116,11 @@ export default {
         this.getCartBookList();
     },
     methods: {
+		onImageError(e, book) {
+            if (e.detail.errMsg) {
+                book.cover = "https://cdn.uviewui.com/uview/empty/data.png";
+            }
+        },
         onSelectItem(item) {
             const values = item.detail.value;
             this.alway = values.length;
@@ -116,32 +132,32 @@ export default {
                     this.$set(el, "checked", false);
                 }
             }
-			const isAllChecked = this.bookList.every(el => el.checked);
-			if(isAllChecked) {
-				this.allChecked = true;
-			} else {
-				this.allChecked = false;
-			}
-        },
-		onSelectAll(item) {
-			for (var i = 0, lenI = this.bookList.length; i < lenI; ++i) {
-                const el = this.bookList[i];
-				if(item.detail.value.length) {
-					this.$set(el, "checked", true);
-				} else {
-					this.$set(el, "checked", false);
-				}
+            const isAllChecked = this.bookList.every((el) => el.checked);
+            if (isAllChecked) {
+                this.allChecked = true;
+            } else {
+                this.allChecked = false;
             }
-			this.alway = this.bookList.length;
-		},
+        },
+        onSelectAll(item) {
+            for (var i = 0, lenI = this.bookList.length; i < lenI; ++i) {
+                const el = this.bookList[i];
+                if (item.detail.value.length) {
+                    this.$set(el, "checked", true);
+                } else {
+                    this.$set(el, "checked", false);
+                }
+            }
+            this.alway = this.bookList.length;
+        },
         goOrder() {
-			const targetBookId = this.bookList.filter((el) => el.checked)
-			if(!targetBookId?.length) {
-				this.$toast('请选择订单后，再提交');
-				return;
-			}
-			console.log('targetBookId', targetBookId);
-			const subitBookIds = targetBookId.map(el => el.bookId).join(',');
+            const targetBookId = this.bookList.filter((el) => el.checked);
+            if (!targetBookId?.length) {
+                this.$toast("请选择订单后，再提交");
+                return;
+            }
+            console.log("targetBookId", targetBookId);
+            const subitBookIds = targetBookId.map((el) => el.bookId).join(",");
             uni.navigateTo({
                 url: "/pages/order/index?books=" + subitBookIds,
             });
@@ -216,7 +232,7 @@ export default {
         }
         .desc {
             color: #a7a7a7;
-			margin-left: 24rpx;
+            margin-left: 24rpx;
         }
     }
 }
@@ -227,13 +243,16 @@ export default {
         display: flex;
         align-items: center;
         padding: 30rpx;
+		height: 140rpx;
         .select {
             margin-right: 15rpx;
         }
-        .shop-image {
+        .shop-left {
             width: 100rpx;
-            image {
+			height: 100%;
+            .shop-image {
                 width: 100%;
+				height: 100%;
             }
         }
         .shop-content {

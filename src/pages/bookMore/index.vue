@@ -57,24 +57,13 @@ export default {
             console.log("value", value);
         },
         querBookList() {
-			// author: null
-			// bookId: 12
-			// classLabel: "语言启蒙"
-			// classLabelId: 9
-			// cover: null
-			// createTime: null
-			// gradeLabel: "学龄前"
-			// gradeLabelId: 1
-			// introduction: "简介测试231313简介测试简介测试啊大大1211414"
-			// isbn: "9789865881982"
-			// nickName: "主题式英语单词画册3"
-			// press: null
-			// price: 100
-			// recommendLabel: null
-			// recommendLabelId: null
-			// updateTime: null
             this.$api.getClassBooksList(this.queryParams).then((res) => {
-                this.bookList = _.cloneDeep(res.records || []);
+                this.bookList = _.cloneDeep(res.records || []).map((el) => {
+                    el.labels = el.recommendLabels
+                        ? el.recommendLabels.split(",")
+                        : [];
+                    return el;
+                });
             });
         },
     },
