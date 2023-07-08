@@ -79,6 +79,7 @@
 
 <script>
 import _ from "lodash";
+import { env, envConfig } from "@/common/config.js";
 export default {
 	filters: {
         formatBaseURL: function (path) {

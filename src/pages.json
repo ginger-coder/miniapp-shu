@@ -11,7 +11,8 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "首页",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+                "enablePullDownRefresh": true
 			}
 		},
 		{
@@ -70,7 +71,6 @@
 			"path": "pages/userHealth/index",
 			"style": {
 				"navigationBarTitleText": "宝贝健康档案",
-				"enablePullDownRefresh": false,
 				"backgroundColor": "#F5F5FF"
 			}
 

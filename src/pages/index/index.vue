@@ -54,10 +54,12 @@ export default {
 			return path.indexOf('http') == -1 ? envConfig[env].baseURL + '' + path : path;
 		}
 	},
-    onLoad() {},
-    async onShow() {
+    onLoad() {
         this.init();
     },
+    onPullDownRefresh() {
+		this.init();
+	},
     methods: {
         init() {
             // this.initBanner();
@@ -68,6 +70,7 @@ export default {
         },
         async initList() {
             this.shopList = await this.$getDict("getBanners");
+            uni.stopPullDownRefresh();
         },
         onImageError(e, index) {
 			if(e.detail.errMsg) {
