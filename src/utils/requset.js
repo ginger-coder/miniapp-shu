@@ -57,7 +57,7 @@ export default class Request {
 						clearTimeout(timer);
 						timer = setTimeout(() => {
 							login('reload');
-						}, 3000);
+						}, 500);
 					}
 					else {
 						uni.showToast({
